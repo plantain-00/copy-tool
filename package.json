@@ -1,0 +1,30 @@
+{
+  "name": "copy-tool",
+  "version": "1.0.0",
+  "description": "A tool to copy text or file from one place, and get it from another place",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plantain-00/copy-tool.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/plantain-00/copy-tool/issues"
+  },
+  "homepage": "https://github.com/plantain-00/copy-tool#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "minimist": "^1.2.0",
+    "socket.io": "^1.4.8"
+  },
+  "devDependencies": {
+    "@types/express": "^4.0.33",
+    "@types/minimist": "^1.1.29",
+    "@types/socket.io": "^1.4.27",
+    "typescript": "^2.0.3"
+  }
+}
