@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
+        "target": "es5",
         "module": "commonjs",
-        "target": "es6",
         "noImplicitAny": true,
         "sourceMap": true,
         "noUnusedLocals": true,
@@ -9,10 +9,7 @@
         "strictNullChecks": true,
         "noImplicitReturns": true,
         "skipLibCheck": true,
-        "noEmitHelpers": true
-    },
-    "exclude": [
-        "static/",
-        "node_modules/"
-    ]
+        "noEmitHelpers": true,
+        "experimentalDecorators": true
+    }
 }
