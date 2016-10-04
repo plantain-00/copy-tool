@@ -1,0 +1,8 @@
+<h1>copy-tool</h1>
+<textarea [(ngModel)]="newText"></textarea>
+<button (click)="copy()">copy</button>
+<ul>
+    <li *ngFor="let message of acceptMessages">
+        <span *ngIf="message.kind === 'text'">{{message.value}}</span>
+    </li>
+</ul>
