@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "build-static": "tsc -p static && webpack",
-    "lint": "tslint index.ts"
+    "lint": "tslint index.ts \"static/*.ts\""
   },
   "repository": {
     "type": "git",
