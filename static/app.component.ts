@@ -1,6 +1,7 @@
 import { Component, Input } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import * as io from "socket.io-client";
+declare var QRCodeLib: any;
 
 function getRoom() {
     return Math.round(Math.random() * 35 * Math.pow(36, 9)).toString(36);
@@ -14,6 +15,12 @@ if (!hash || hash === "#") {
 } else {
     room = hash.substr(1);
 }
+
+new QRCodeLib.QRCodeDraw().draw(document.getElementById("qr"), document.location.href, (error: Error) => {
+    if (error) {
+        console.log(error);
+    }
+});
 
 type TextData = {
     kind: "text";
