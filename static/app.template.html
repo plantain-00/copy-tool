@@ -1,8 +1,10 @@
 <h1>copy-tool</h1>
 <textarea [(ngModel)]="newText"></textarea>
-<button (click)="copy()">copy</button>
+<button (click)="copyText()">copy</button>
+<input type="file" (change)="copyFile($event)">
 <ul>
     <li *ngFor="let message of acceptMessages">
         <span *ngIf="message.kind === 'text'">{{message.value}}</span>
+        <a *ngIf="message.kind === 'file'" [href]="message.url" [download]="message.value.name">{{message.value.name}}</a>
     </li>
 </ul>

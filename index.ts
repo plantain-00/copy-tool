@@ -7,6 +7,8 @@ const argv = minimist(process.argv.slice(2));
 const port = argv["p"] || 8000;
 const host = argv["h"] || "localhost";
 
+app.use(express.static(__dirname + "/static"));
+
 const server = app.listen(port, host, () => {
     console.log(`api Server is listening: ${host}:${port}`);
 });

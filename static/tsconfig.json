@@ -10,6 +10,7 @@
         "noImplicitReturns": true,
         "skipLibCheck": true,
         "noEmitHelpers": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     }
 }

@@ -6,8 +6,10 @@
   "scripts": {
     "build": "tsc",
     "build-static": "tsc -p static && npm run minifier-template && webpack --display-modules",
+    "build-static-debug": "tsc -p static && npm run minifier-template-debug && webpack --display-modules --config webpack.config.debug.js",
     "lint": "tslint index.ts \"static/*.ts\"",
-    "minifier-template": "html-minifier --collapse-whitespace --case-sensitive static/app.template.html -o static/app.html"
+    "minifier-template": "html-minifier --collapse-whitespace --case-sensitive static/app.template.html -o static/app.html",
+    "minifier-template-debug": "html-minifier --case-sensitive static/app.template.html -o static/app.html"
   },
   "repository": {
     "type": "git",
