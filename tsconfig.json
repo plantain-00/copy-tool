@@ -9,7 +9,12 @@
         "strictNullChecks": true,
         "noImplicitReturns": true,
         "skipLibCheck": true,
-        "noEmitHelpers": true
+        "noEmitHelpers": true,
+        "lib": [
+            "scripthost",
+            "es5",
+            "dom"
+        ]
     },
     "exclude": [
         "static/",
