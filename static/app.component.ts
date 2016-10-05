@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import * as io from "socket.io-client";
 
@@ -40,6 +40,7 @@ const socket = io("/", { query: { room } });
     template: require("raw!./app.html"),
 })
 export class AppComponent {
+    @Input()
     public acceptMessages: (TextData | FileData)[] = [];
     public newText: string = "";
     constructor(private sanitizer: DomSanitizer) {
