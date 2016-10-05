@@ -6,3 +6,19 @@
 input, textarea {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+pre {
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+}
+
+.copy-button {
+    width: 100%;
+}
+
+.row {
+    margin-top: 5px;
+}

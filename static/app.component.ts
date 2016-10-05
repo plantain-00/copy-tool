@@ -7,6 +7,14 @@ function getRoom() {
     return Math.round(Math.random() * 35 * Math.pow(36, 9)).toString(36);
 }
 
+function getNow() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+    return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+}
+
 const hash = document.location.hash;
 let room: string;
 if (!hash || hash === "#") {
@@ -25,6 +33,7 @@ new QRCodeLib.QRCodeDraw().draw(document.getElementById("qr"), document.location
 type TextData = {
     kind: "text";
     value: string;
+    moment: string;
 }
 
 type ArrayBufferData = {
@@ -38,6 +47,7 @@ type FileData = {
     kind: "file";
     value: File;
     url: SafeResourceUrl;
+    moment: string;
 }
 
 const socket = io("/", { query: { room } });
@@ -58,8 +68,10 @@ export class AppComponent {
                     kind: "file",
                     value: file,
                     url: this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file)),
+                    moment: getNow(),
                 });
             } else {
+                data.moment = getNow();
                 this.acceptMessages.push(data);
             }
         });

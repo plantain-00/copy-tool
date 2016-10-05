@@ -8,7 +8,7 @@
     "bundle-vendor-css-debug": "cat ./node_modules/bootstrap/dist/css/bootstrap.css ./node_modules/github-fork-ribbon-css/gh-fork-ribbon.css > static/vendor.bundle.css",
     "bundle-index-css": "cleancss static/index.css -o static/index.bundle.css",
     "bundle-index-css-debug": "cat static/index.css > static/index.bundle.css",
-    "clean": "rm -f static/vendor.bundle.js static/vendor.bundle.css static/main.bundle.js static/index.bundle.css static/main.js static/main.js.map static/vendor.js static/vendor.js.map static/vendor.bundle.js static/template.html static/app.html",
+    "clean": "rm -f static/vendor.bundle.js static/vendor.bundle.css static/main.bundle.js static/index.bundle.css static/main.js static/main.js.map static/vendor.js static/vendor.js.map static/vendor.bundle.js static/template.html static/app.html static/app.module.js static/app.component.js",
     "clean-rev": "rm -f static/vendor.bundle-*.js static/vendor.bundle-*.css static/main.bundle-*.js static/index.bundle-*.css",
     "rev": "npm run clean-rev && rev-static static/vendor.bundle.css static/index.bundle.css static/vendor.bundle.js static/main.bundle.js static/index.ejs.html -o static/index.html -- --rmWhitespace",
     "build": "tsc",
