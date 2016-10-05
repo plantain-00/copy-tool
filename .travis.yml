@@ -21,3 +21,4 @@ addons:
 branches:
   except:
     - gh-pages
+    - release
