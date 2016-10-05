@@ -13,6 +13,6 @@ module.exports = {
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.CommonsChunkPlugin({
             name: ["main", "vendor"]
-        }),
+        })
     ]
 };

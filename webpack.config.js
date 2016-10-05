@@ -21,6 +21,6 @@ module.exports = {
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: ["main", "vendor"]
-        }),
+        })
     ]
 };

@@ -1,7 +1,8 @@
-import { Component, Input } from "@angular/core";
+import { Component } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import * as io from "socket.io-client";
 declare var QRCodeLib: any;
+const Clipboard = require("clipboard");
 
 function getRoom() {
     return Math.round(Math.random() * 35 * Math.pow(36, 9)).toString(36);
@@ -30,10 +31,13 @@ new QRCodeLib.QRCodeDraw().draw(document.getElementById("qr"), document.location
     }
 });
 
+new Clipboard(".clipboard");
+
 type TextData = {
     kind: "text";
     value: string;
     moment: string;
+    id: number;
 }
 
 type ArrayBufferData = {
@@ -48,6 +52,7 @@ type FileData = {
     value: File;
     url: SafeResourceUrl;
     moment: string;
+    id: number;
 }
 
 const socket = io("/", { query: { room } });
@@ -57,9 +62,9 @@ const socket = io("/", { query: { room } });
     template: require("raw!./app.html"),
 })
 export class AppComponent {
-    @Input()
     public acceptMessages: (TextData | FileData)[] = [];
     public newText: string = "";
+    public id: number = 1;
     constructor(private sanitizer: DomSanitizer) {
         socket.on("copy", (data: TextData | ArrayBufferData) => {
             if (data.kind === "file") {
@@ -69,9 +74,11 @@ export class AppComponent {
                     value: file,
                     url: this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file)),
                     moment: getNow(),
+                    id: this.id++,
                 });
             } else {
                 data.moment = getNow();
+                data.id = this.id++;
                 this.acceptMessages.push(data);
             }
         });
@@ -95,5 +102,8 @@ export class AppComponent {
                 type: file.type,
             });
         }
+    }
+    public trackByMessages(index: number, message: TextData | FileData) {
+        return message.id;
     }
 }

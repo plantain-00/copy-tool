@@ -21,10 +21,11 @@
 <div class="row">
     <div class="col-md-12">
         <ul>
-            <li *ngFor="let message of acceptMessages">
+            <li *ngFor="let message of acceptMessages; trackBy:trackByMessages">
                 <span class="label label-default">{{message.moment}}</span>
                 <span class="label label-info">{{message.kind}}</span>
-                <pre *ngIf="message.kind === 'text'">{{message.value}}</pre>
+                <button *ngIf="message.kind === 'text'" class="btn btn-xs btn-default clipboard" attr.data-clipboard-target="#clipboard_{{message.id}}">copy</button>
+                <pre *ngIf="message.kind === 'text'" id="clipboard_{{message.id}}">{{message.value}}</pre>
                 <a *ngIf="message.kind === 'file'" class="btn btn-link" [href]="message.url" [download]="message.value.name">{{message.value.name}}</a>
             </li>
         </ul>
