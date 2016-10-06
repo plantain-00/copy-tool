@@ -7,8 +7,8 @@
     <meta name="renderer" content="webkit" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Copy Tool</title>
-    <link href="./<%=staticVendorBundleCss %>" rel="preload" as="style" onload="this.rel='stylesheet'">
-    <link href="./<%=staticIndexBundleCss %>" rel="preload" as="style" onload="this.rel='stylesheet'">
+    <link href="./<%=staticVendorBundleCss %>" rel="preload" as="style" onload="this.rel='stylesheet'" crossOrigin = "anonymous" integrity="<%=sri.staticVendorBundleCss %>">
+    <link href="./<%=staticIndexBundleCss %>" rel="preload" as="style" onload="this.rel='stylesheet'" crossOrigin = "anonymous" integrity="<%=sri.staticIndexBundleCss %>">
 </head>
 
 <body>
@@ -19,8 +19,8 @@
             <canvas id="qr"></canvas>
         </div>
     </div>
-    <script src="./<%=staticVendorBundleJs %>"></script>
-    <script src="./<%=staticMainBundleJs %>"></script>
+    <script src="./<%=staticVendorBundleJs %>" crossOrigin = "anonymous" integrity="<%=sri.staticVendorBundleJs %>"></script>
+    <script src="./<%=staticMainBundleJs %>" crossOrigin = "anonymous" integrity="<%=sri.staticMainBundleJs %>"></script>
 </body>
 
 </html>

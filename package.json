@@ -10,13 +10,14 @@
     "bundle-index-css-debug": "cat static/index.css > static/index.bundle.css",
     "clean": "rm -f static/vendor.bundle.js static/vendor.bundle.css static/main.bundle.js static/index.bundle.css static/main.js static/main.js.map static/vendor.js static/vendor.js.map static/vendor.bundle.js static/template.html static/app.html static/app.module.js static/app.component.js",
     "clean-rev": "rm -f static/vendor.bundle-*.js static/vendor.bundle-*.css static/main.bundle-*.js static/index.bundle-*.css",
-    "rev": "npm run clean-rev && rev-static static/vendor.bundle.css static/index.bundle.css static/vendor.bundle.js static/main.bundle.js static/index.ejs.html -o static/index.html -- --rmWhitespace",
+    "rev": "npm run clean-rev && rev-static",
     "build": "tsc",
-    "build-static": "npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && npm run minifier-template && webpack --display-modules && npm run rev && npm run clean",
-    "build-static-debug": "npm run bundle-vendor-css-debug && npm run bundle-index-css-debug && tsc -p static && npm run minifier-template-debug && webpack --display-modules --config webpack.config.debug.js && npm run rev && npm run clean",
+    "build-static": "npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && npm run minifier-template && webpack --display-modules && npm run bundle-vendor-js && npm run rev && npm run clean",
+    "build-static-debug": "npm run bundle-vendor-css-debug && npm run bundle-index-css-debug && tsc -p static && npm run minifier-template-debug && webpack --display-modules --config webpack.config.debug.js && npm run bundle-vendor-js && npm run rev && npm run clean",
     "lint": "tslint index.ts \"static/*.ts\"",
     "minifier-template": "html-minifier --collapse-whitespace --case-sensitive static/app.template.html -o static/app.html",
-    "minifier-template-debug": "html-minifier --case-sensitive static/app.template.html -o static/app.html"
+    "minifier-template-debug": "html-minifier --case-sensitive static/app.template.html -o static/app.html",
+    "bundle-vendor-js": "cat ./node_modules/clipboard/dist/clipboard.min.js >> static/vendor.bundle.js"
   },
   "repository": {
     "type": "git",
@@ -57,7 +58,7 @@
     "html-minifier": "^3.1.0",
     "qrcode": "^0.5.0",
     "raw-loader": "^0.5.1",
-    "rev-static": "^1.2.0",
+    "rev-static": "^1.3.0",
     "rxjs": "5.0.0-beta.12",
     "socket.io-client": "^1.4.8",
     "tslib": "^1.0.0",
