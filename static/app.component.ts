@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, NgZone } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import * as io from "socket.io-client";
 declare var QRCodeLib: any;
@@ -64,22 +64,24 @@ export class AppComponent {
     public acceptMessages: (TextData | FileData)[] = [];
     public newText: string = "";
     public id: number = 1;
-    constructor(private sanitizer: DomSanitizer) {
+    constructor(private sanitizer: DomSanitizer, zone: NgZone) {
         socket.on("copy", (data: TextData | ArrayBufferData) => {
-            if (data.kind === "file") {
-                const file = new File([data.value], data.name, { type: data.type });
-                this.acceptMessages.push({
-                    kind: "file",
-                    value: file,
-                    url: this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file)),
-                    moment: getNow(),
-                    id: this.id++,
-                });
-            } else {
-                data.moment = getNow();
-                data.id = this.id++;
-                this.acceptMessages.push(data);
-            }
+            zone.run(() => {
+                if (data.kind === "file") {
+                    const file = new File([data.value], data.name, { type: data.type });
+                    this.acceptMessages.unshift({
+                        kind: "file",
+                        value: file,
+                        url: this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file)),
+                        moment: getNow(),
+                        id: this.id++,
+                    });
+                } else {
+                    data.moment = getNow();
+                    data.id = this.id++;
+                    this.acceptMessages.unshift(data);
+                }
+            });
         });
     }
     public copyText() {
