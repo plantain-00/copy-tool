@@ -15,7 +15,10 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <input type="file" class="form-control" (change)="copyFile($event)">
+        <file-uploader (fileUploaded)="fileUploaded($event)"
+            multiple="true"
+            locale="zh-cn">
+        </file-uploader>
     </div>
 </div>
 <div class="row">

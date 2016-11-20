@@ -37,14 +37,14 @@ type TextData = {
     value: string;
     moment: string;
     id: number;
-}
+};
 
 type ArrayBufferData = {
     kind: "file";
     value: ArrayBuffer;
     name: string;
     type: string;
-}
+};
 
 type FileData = {
     kind: "file";
@@ -52,7 +52,7 @@ type FileData = {
     url: SafeResourceUrl;
     moment: string;
     id: number;
-}
+};
 
 const socket = io("/", { query: { room } });
 
@@ -93,13 +93,20 @@ export class AppComponent {
             this.newText = "";
         }
     }
-    public copyFile(e: { target: { files: File[] } }) {
-        if (e.target.files.length > 0) {
-            const file = e.target.files[0];
+    public fileUploaded(file: File | Blob) {
+        if ((file as File).name) {
             socket.emit("copy", {
                 kind: "file",
                 value: file,
-                name: file.name,
+                name: (file as File).name,
+                type: file.type,
+            });
+        } else {
+            const extensionName = file.type.split("/")[1];
+            socket.emit("copy", {
+                kind: "file",
+                value: file,
+                name: (file as File).name || `no name.${extensionName}`,
                 type: file.type,
             });
         }
