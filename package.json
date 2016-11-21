@@ -12,12 +12,11 @@
     "clean-rev": "rm -f static/vendor.bundle-*.js static/vendor.bundle-*.css static/main.bundle-*.js static/index.bundle-*.css",
     "rev": "npm run clean-rev && rev-static",
     "build": "tsc",
-    "build-static": "npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && npm run minifier-template && webpack --display-modules && npm run bundle-vendor-js && npm run rev && npm run clean",
-    "build-static-debug": "npm run bundle-vendor-css-debug && npm run bundle-index-css-debug && tsc -p static && npm run minifier-template-debug && webpack --display-modules --config webpack.config.debug.js && npm run bundle-vendor-js && npm run rev && npm run clean",
+    "build-static": "npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && npm run minifier-template && webpack --display-modules && npm run rev && npm run clean",
+    "build-static-debug": "npm run bundle-vendor-css-debug && npm run bundle-index-css-debug && tsc -p static && npm run minifier-template-debug && webpack --display-modules --config webpack.config.debug.js && npm run rev && npm run clean",
     "lint": "tslint index.ts \"static/*.ts\"",
     "minifier-template": "html-minifier --collapse-whitespace --case-sensitive static/app.template.html -o static/app.html",
-    "minifier-template-debug": "html-minifier --case-sensitive static/app.template.html -o static/app.html",
-    "bundle-vendor-js": "cat ./node_modules/clipboard/dist/clipboard.min.js >> static/vendor.bundle.js"
+    "minifier-template-debug": "html-minifier --case-sensitive static/app.template.html -o static/app.html"
   },
   "repository": {
     "type": "git",

@@ -2,6 +2,7 @@ import { Component, NgZone } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import * as io from "socket.io-client";
 declare var QRCodeLib: any;
+import * as Clipboard from "clipboard";
 
 function getRoom() {
     return Math.round(Math.random() * 35 * Math.pow(36, 9)).toString(36);
