@@ -9,4 +9,4 @@ import "@angular/forms";
 import "socket.io-client";
 import "qrcode/qrcodeclient";
 import "clipboard";
-import "file-uploader-component/dist/angular"
+import "file-uploader-component/dist/angular";
