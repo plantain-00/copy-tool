@@ -62,9 +62,10 @@ const socket = io("/", { query: { room } });
     template: require("raw!./app.html"),
 })
 export class AppComponent {
-    public acceptMessages: (TextData | FileData)[] = [];
-    public newText: string = "";
-    public id: number = 1;
+    acceptMessages: (TextData | FileData)[] = [];
+    newText: string = "";
+    id: number = 1;
+    locale = navigator.language ? navigator.language.toLowerCase() : undefined;
     constructor(private sanitizer: DomSanitizer, zone: NgZone) {
         socket.on("copy", (data: TextData | ArrayBufferData) => {
             zone.run(() => {
@@ -85,7 +86,7 @@ export class AppComponent {
             });
         });
     }
-    public copyText() {
+    copyText() {
         if (this.newText) {
             socket.emit("copy", {
                 kind: "text",
@@ -94,7 +95,16 @@ export class AppComponent {
             this.newText = "";
         }
     }
-    public fileUploaded(file: File | Blob) {
+    fileUploaded(file: File | Blob) {
+        if (file.size >= 10 * 1024 * 1024) {
+            this.acceptMessages.unshift({
+                kind: "text",
+                value: "the file is too large(>= 10MB).",
+                moment: getNow(),
+                id: this.id++,
+            });
+            return;
+        }
         if ((file as File).name) {
             socket.emit("copy", {
                 kind: "file",
@@ -112,7 +122,7 @@ export class AppComponent {
             });
         }
     }
-    public trackByMessages(index: number, message: TextData | FileData) {
+    trackByMessages(index: number, message: TextData | FileData) {
         return message.id;
     }
 }
