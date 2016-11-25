@@ -65,7 +65,7 @@ export class AppComponent {
     acceptMessages: (TextData | FileData)[] = [];
     newText: string = "";
     id: number = 1;
-    locale = navigator.language ? navigator.language.toLowerCase() : undefined;
+    locale = navigator.language;
     constructor(private sanitizer: DomSanitizer, zone: NgZone) {
         socket.on("copy", (data: TextData | ArrayBufferData) => {
             zone.run(() => {
