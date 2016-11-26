@@ -1,7 +1,7 @@
 import { Component, NgZone } from "@angular/core";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import * as io from "socket.io-client";
-declare var QRCodeLib: any;
+
 import * as Clipboard from "clipboard";
 
 function getRoom() {
@@ -16,16 +16,7 @@ function getNow() {
     return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
 }
 
-const hash = document.location.hash;
-let room: string;
-if (!hash || hash === "#") {
-    room = getRoom();
-    document.location.hash = "#" + room;
-} else {
-    room = hash.substr(1);
-}
-
-new QRCodeLib.QRCodeDraw().draw(document.getElementById("qr"), document.location.href, (error: Error) => {
+new QRCodeLib.QRCodeDraw().draw(document.getElementById("qr") as HTMLCanvasElement, document.location.href, (error: Error) => {
     if (error) {
         console.log(error);
     }
@@ -55,8 +46,6 @@ type FileData = {
     id: number;
 };
 
-const socket = io("/", { query: { room } });
-
 @Component({
     selector: "app",
     template: require("raw!./app.html"),
@@ -66,29 +55,54 @@ export class AppComponent {
     newText: string = "";
     id: number = 1;
     locale = navigator.language;
-    constructor(private sanitizer: DomSanitizer, zone: NgZone) {
-        socket.on("copy", (data: TextData | ArrayBufferData) => {
-            zone.run(() => {
-                if (data.kind === "file") {
-                    const file = new File([data.value], data.name, { type: data.type });
-                    this.acceptMessages.unshift({
-                        kind: "file",
-                        value: file,
-                        url: this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file)),
-                        moment: getNow(),
-                        id: this.id++,
-                    });
-                } else {
-                    data.moment = getNow();
-                    data.id = this.id++;
-                    this.acceptMessages.unshift(data);
+    socket: SocketIOClient.Socket;
+    constructor(private sanitizer: DomSanitizer, private zone: NgZone) {
+        const hash = document.location.hash;
+        let room: string;
+        if (!hash || hash === "#") {
+            room = getRoom();
+            document.location.hash = "#" + room;
+        } else {
+            room = hash.substr(1);
+        }
+        this.socket = io("/", { query: { room } });
+        window.onhashchange = (e => {
+            if (e.newURL) {
+                const index = e.newURL.indexOf("#");
+                if (index > -1) {
+                    const newRoom = e.newURL.substring(index + 1);
+                    if (room !== newRoom) {
+                        this.socket.disconnect();
+                        room = newRoom;
+                        this.socket = io("/", { query: { room } });
+                        this.socket.on("copy", this.messageRecieved);
+                    }
                 }
-            });
+            }
+        });
+        this.socket.on("copy", this.messageRecieved);
+    }
+    messageRecieved = (data: TextData | ArrayBufferData) => {
+        this.zone.run(() => {
+            if (data.kind === "file") {
+                const file = new File([data.value], data.name, { type: data.type });
+                this.acceptMessages.unshift({
+                    kind: "file",
+                    value: file,
+                    url: this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file)),
+                    moment: getNow(),
+                    id: this.id++,
+                });
+            } else {
+                data.moment = getNow();
+                data.id = this.id++;
+                this.acceptMessages.unshift(data);
+            }
         });
     }
     copyText() {
         if (this.newText) {
-            socket.emit("copy", {
+            this.socket.emit("copy", {
                 kind: "text",
                 value: this.newText,
             });
@@ -106,7 +120,7 @@ export class AppComponent {
             return;
         }
         if ((file as File).name) {
-            socket.emit("copy", {
+            this.socket.emit("copy", {
                 kind: "file",
                 value: file,
                 name: (file as File).name,
@@ -114,7 +128,7 @@ export class AppComponent {
             });
         } else {
             const extensionName = file.type.split("/")[1];
-            socket.emit("copy", {
+            this.socket.emit("copy", {
                 kind: "file",
                 value: file,
                 name: (file as File).name || `no name.${extensionName}`,
