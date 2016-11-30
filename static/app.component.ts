@@ -24,7 +24,6 @@ function drawQRCode() {
     });
 }
 
-
 new Clipboard(".clipboard");
 
 type TextData = {
