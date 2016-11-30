@@ -16,11 +16,14 @@ function getNow() {
     return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
 }
 
-new QRCodeLib.QRCodeDraw().draw(document.getElementById("qr") as HTMLCanvasElement, document.location.href, (error: Error) => {
-    if (error) {
-        console.log(error);
-    }
-});
+function drawQRCode() {
+    new QRCodeLib.QRCodeDraw().draw(document.getElementById("qr") as HTMLCanvasElement, document.location.href, (error: Error) => {
+        if (error) {
+            console.log(error);
+        }
+    });
+}
+
 
 new Clipboard(".clipboard");
 
@@ -66,6 +69,8 @@ export class AppComponent {
             room = hash.substr(1);
         }
         this.socket = io("/", { query: { room } });
+        this.socket.on("copy", this.messageRecieved);
+        drawQRCode();
         window.onhashchange = (e => {
             if (e.newURL) {
                 const index = e.newURL.indexOf("#");
@@ -76,11 +81,11 @@ export class AppComponent {
                         room = newRoom;
                         this.socket = io("/", { query: { room } });
                         this.socket.on("copy", this.messageRecieved);
+                        drawQRCode();
                     }
                 }
             }
         });
-        this.socket.on("copy", this.messageRecieved);
     }
     messageRecieved = (data: TextData | ArrayBufferData) => {
         this.zone.run(() => {
