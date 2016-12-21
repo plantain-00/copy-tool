@@ -22,7 +22,11 @@ io.on("connection", socket => {
     } else {
         socket.join(room);
         socket.on("copy", (data: any) => {
-            io.in(room).emit("copy", data);
+            for (const socketId in io.sockets.sockets) {
+                if (socketId !== socket.id) {
+                    io.in(socketId).emit("copy", data);
+                }
+            }
         });
     }
 });
