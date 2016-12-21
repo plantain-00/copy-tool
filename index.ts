@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as socketIO from "socket.io";
 import * as minimist from "minimist";
+const debounce: any = require("lodash.debounce");
 
 const app = express();
 const argv = minimist(process.argv.slice(2));
@@ -46,13 +47,11 @@ io.on("connection", socket => {
     } else {
         socket.join(room);
 
-        function sendClientCount() {
-            setTimeout(() => {
-                io.in(room).emit("client_count", {
-                    clientCount: getClientCount(room),
-                });
-            }, 1000);
-        }
+        const sendClientCount: () => void = debounce(() => {
+            io.in(room).emit("client_count", {
+                clientCount: getClientCount(room),
+            });
+        }, 300);
 
         // when a client connected, client count changed, and should broadcast it to all clients in the room.
         sendClientCount();
