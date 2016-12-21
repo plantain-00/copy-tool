@@ -29,8 +29,8 @@ new Clipboard(".clipboard");
 type TextData = {
     kind: "text";
     value: string;
-    moment: string;
-    id: number;
+    moment?: string;
+    id?: number;
 };
 
 type ArrayBufferData = {
@@ -67,9 +67,13 @@ export class AppComponent {
         } else {
             room = hash.substr(1);
         }
-        this.socket = io("/", { query: { room } });
-        this.socket.on("copy", this.messageRecieved);
-        drawQRCode();
+        const connect = () => {
+            this.socket = io("/", { query: { room } });
+            this.socket.on("copy", this.messageRecieved);
+            this.socket.on("message_sent", this.messageSent);
+            drawQRCode();
+        };
+        connect();
         window.onhashchange = (e => {
             if (e.newURL) {
                 const index = e.newURL.indexOf("#");
@@ -78,9 +82,7 @@ export class AppComponent {
                     if (room !== newRoom) {
                         this.socket.disconnect();
                         room = newRoom;
-                        this.socket = io("/", { query: { room } });
-                        this.socket.on("copy", this.messageRecieved);
-                        drawQRCode();
+                        connect();
                     }
                 }
             }
@@ -102,6 +104,16 @@ export class AppComponent {
                 data.id = this.id++;
                 this.acceptMessages.unshift(data);
             }
+        });
+    }
+    messageSent = (data: { clientCount: number; kind: "text" | "file"; }) => {
+        this.zone.run(() => {
+            this.acceptMessages.unshift({
+                kind: "text",
+                value: `the ${data.kind} is sent successfully to ${data.clientCount} clients.`,
+                moment: getNow(),
+                id: this.id++,
+            });
         });
     }
     copyText() {
