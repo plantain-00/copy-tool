@@ -25,24 +25,56 @@ type CopyData = {
         type: string,
     };
 
+/**
+ * for all sockets, if it joined the room, count it, minus current socket itself
+ */
+function getClientCount(room: string) {
+    let clientCount = 0;
+    for (const socketId in io.sockets.sockets) {
+        const rooms = io.sockets.sockets[socketId].rooms;
+        if (rooms[room] !== undefined) {
+            clientCount++;
+        }
+    }
+    return clientCount - 1;
+}
+
 io.on("connection", socket => {
     const room = socket.handshake.query.room;
     if (!room) {
         socket.disconnect(true);
     } else {
         socket.join(room);
+
+        function sendClientCount() {
+            setTimeout(() => {
+                io.in(room).emit("client_count", {
+                    clientCount: getClientCount(room),
+                });
+            }, 1000);
+        }
+
+        // when a client connected, client count changed, and should broadcast it to all clients in the room.
+        sendClientCount();
+
         socket.on("copy", (data: CopyData) => {
-            let clientCount = 0;
+            // for all sockets, if it joined the room and not current socket, send the message
             for (const socketId in io.sockets.sockets) {
-                if (socketId !== socket.id) {
-                    clientCount++;
+                const rooms = io.sockets.sockets[socketId].rooms;
+                if (rooms[room] !== undefined
+                    && socketId !== socket.id) {
                     io.in(socketId).emit("copy", data);
                 }
             }
+            // notify to sender if message is sent successfully
             socket.emit("message_sent", {
                 kind: data.kind,
-                clientCount,
             });
+        });
+
+        // when a client disconnected, client count changed, and should broadcast it to all clients in the room.
+        socket.on("disconnect", () => {
+            sendClientCount();
         });
     }
 });

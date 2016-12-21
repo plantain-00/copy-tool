@@ -58,6 +58,7 @@ export class AppComponent {
     id: number = 1;
     locale = navigator.language;
     socket: SocketIOClient.Socket;
+    clientCount = 0;
     constructor(private sanitizer: DomSanitizer, private zone: NgZone) {
         const hash = document.location.hash;
         let room: string;
@@ -69,8 +70,9 @@ export class AppComponent {
         }
         const connect = () => {
             this.socket = io("/", { query: { room } });
-            this.socket.on("copy", this.messageRecieved);
-            this.socket.on("message_sent", this.messageSent);
+            this.socket.on("copy", this.onMessageRecieved);
+            this.socket.on("message_sent", this.onMessageSent);
+            this.socket.on("client_count", this.onClientCount);
             drawQRCode();
         };
         connect();
@@ -88,7 +90,7 @@ export class AppComponent {
             }
         });
     }
-    messageRecieved = (data: TextData | ArrayBufferData) => {
+    onMessageRecieved = (data: TextData | ArrayBufferData) => {
         this.zone.run(() => {
             if (data.kind === "file") {
                 const file = new File([data.value], data.name, { type: data.type });
@@ -106,26 +108,62 @@ export class AppComponent {
             }
         });
     }
-    messageSent = (data: { clientCount: number; kind: "text" | "file"; }) => {
+    onMessageSent = (data: { kind: "text" | "file" }) => {
         this.zone.run(() => {
             this.acceptMessages.unshift({
                 kind: "text",
-                value: `the ${data.kind} is sent successfully to ${data.clientCount} clients.`,
+                value: `the ${data.kind} is sent successfully to ${this.clientCount} clients.`,
                 moment: getNow(),
                 id: this.id++,
             });
         });
     }
-    copyText() {
-        if (this.newText) {
-            this.socket.emit("copy", {
-                kind: "text",
-                value: this.newText,
-            });
-            this.newText = "";
+    onClientCount = (data: { clientCount: number }) => {
+        this.zone.run(() => {
+            this.clientCount = data.clientCount;
+        });
+    }
+    get buttonText() {
+        if (this.clientCount > 0) {
+            return `Copy the text to ${this.clientCount} clients`;
         }
+        return "No clients to sent";
+    }
+    copyText() {
+        if (this.clientCount <= 0) {
+            this.acceptMessages.unshift({
+                kind: "text",
+                value: "No clients to sent.",
+                moment: getNow(),
+                id: this.id++,
+            });
+            return;
+        }
+        if (!this.newText) {
+            this.acceptMessages.unshift({
+                kind: "text",
+                value: "No text to sent.",
+                moment: getNow(),
+                id: this.id++,
+            });
+            return;
+        }
+        this.socket.emit("copy", {
+            kind: "text",
+            value: this.newText,
+        });
+        this.newText = "";
     }
     fileUploaded(file: File | Blob) {
+        if (this.clientCount <= 0) {
+            this.acceptMessages.unshift({
+                kind: "text",
+                value: "No clients to sent.",
+                moment: getNow(),
+                id: this.id++,
+            });
+            return;
+        }
         if (file.size >= 10 * 1024 * 1024) {
             this.acceptMessages.unshift({
                 kind: "text",
