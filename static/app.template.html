@@ -13,6 +13,11 @@
         <button class="btn btn-primary copy-button" (click)="copyText()">{{buttonText}}</button>
     </div>
 </div>
+<div class="row" *ngIf="canCreateOffer">
+    <div class="col-md-12">
+        <button class="btn btn-default copy-button" (click)="startToConnect()">start to connect</button>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         <file-uploader (fileUploaded)="fileUploaded($event)"

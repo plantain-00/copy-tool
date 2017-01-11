@@ -71,6 +71,28 @@ io.on("connection", socket => {
             });
         });
 
+        socket.on("offer", (data: any) => {
+            const json = {
+                sid: socket.id,
+                offer: data,
+            };
+            // for all sockets, if it joined the room and not current socket, send the offer
+            for (const socketId in io.sockets.sockets) {
+                const rooms = io.sockets.sockets[socketId].rooms;
+                if (rooms[room] !== undefined
+                    && socketId !== socket.id) {
+                    io.in(socketId).emit("offer", json);
+                }
+            }
+        });
+
+        socket.on("answer", (data: { sid: string; answer: any }) => {
+            io.in(data.sid).emit("answer", {
+                sid: socket.id,
+                answer: data.answer,
+            });
+        });
+
         // when a client disconnected, client count changed, and should broadcast it to all clients in the room.
         socket.on("disconnect", () => {
             sendClientCount();
