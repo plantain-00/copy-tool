@@ -31,6 +31,14 @@ declare class RTCSessionDescription {
     toJSON(): { type: "offer" | "answer"; sdp: string };
 }
 
+declare class TextEncoder {
+    encode(text: string): Uint8Array;
+}
+
+declare class TextDecoder {
+    decode(uint8Array: Uint8Array): string;
+}
+
 const supportWebRTC = !!(window as any).RTCPeerConnection;
 
 function getRoom() {
@@ -61,6 +69,93 @@ function drawQRCode() {
     });
 }
 
+abstract class SplitFileBase {
+    decodeBlock(block: Uint8Array) {
+        const totalBytesCountBinary = block.subarray(0, 4);
+        const totalBytesCount = this.uint8ArrayToInt32(totalBytesCountBinary);
+
+        const fileNameBinaryLengthBinary = block.subarray(4, 8);
+        const fileNameBinaryLength = this.uint8ArrayToInt32(fileNameBinaryLengthBinary);
+        const fileNameBinary = block.subarray(8, 8 + fileNameBinaryLength);
+        const fileName = this.decode(fileNameBinary);
+
+        const totalBlockCountBinary = block.subarray(8 + fileNameBinaryLength, 12 + fileNameBinaryLength);
+        const totalBlockCount = this.uint8ArrayToInt32(totalBlockCountBinary);
+
+        const currentBlockIndexBinary = block.subarray(12 + fileNameBinaryLength, 16 + fileNameBinaryLength);
+        const currentBlockIndex = this.uint8ArrayToInt32(currentBlockIndexBinary);
+
+        const binary = block.subarray(16 + fileNameBinaryLength);
+        return {
+            totalBytesCount,
+            fileName,
+            totalBlockCount,
+            currentBlockIndex,
+            binary,
+        };
+    }
+    split(uint8Array: Uint8Array, fileName: string, size: number = 10000) {
+        const blocks: Uint8Array[] = [];
+        if (uint8Array.length === 0) {
+            return blocks;
+        }
+        const totalBlockCount = Math.floor((uint8Array.length - 1) / size) + 1;
+        const totalBlockCountBinary = this.int32ToUint8Array(totalBlockCount);
+
+        const totalBytesCountBinary = this.int32ToUint8Array(uint8Array.length);
+
+        const fileNameBinary = this.encode(fileName);
+        const fileNameBinaryLengthBinary = this.int32ToUint8Array(fileNameBinary.length);
+
+        for (let i = 0; i < totalBlockCount; i++) {
+            const binary = uint8Array.subarray(i * size, i * size + size);
+            const block = new Uint8Array(16 + fileNameBinary.length + binary.length);
+            block.set(totalBytesCountBinary, 0);
+            block.set(fileNameBinaryLengthBinary, 4);
+            block.set(fileNameBinary, 8);
+            block.set(totalBlockCountBinary, 8 + fileNameBinary.length);
+            const currentBlockIndexBinary = this.int32ToUint8Array(i);
+            block.set(currentBlockIndexBinary, 12 + fileNameBinary.length);
+            block.set(binary, 16 + fileNameBinary.length);
+            blocks.push(block);
+        }
+        return blocks;
+    }
+    protected abstract encode(text: string): Uint8Array;
+    protected abstract decode(uint8Array: Uint8Array): string;
+    private int32ToUint8Array(num: number) {
+        const result = new Uint8Array(4);
+        result[3] = num % 256;
+        num >>= 8;
+        result[2] = num % 256;
+        num >>= 8;
+        result[1] = num % 256;
+        num >>= 8;
+        result[0] = num % 256;
+        return result;
+    }
+    private uint8ArrayToInt32(uint8Array: Uint8Array) {
+        let result = uint8Array[0];
+        result <<= 8;
+        result += uint8Array[1];
+        result <<= 8;
+        result += uint8Array[2];
+        result <<= 8;
+        return result + uint8Array[3];
+    }
+}
+
+export class SplitFileForBrowser extends SplitFileBase {
+    private textEncoder = new TextEncoder();
+    private textDecoder = new TextDecoder();
+    protected encode(text: string) {
+        return this.textEncoder.encode(text);
+    }
+    protected decode(uint8Array: Uint8Array) {
+        return this.textDecoder.decode(uint8Array);
+    }
+}
+
 new Clipboard(".clipboard");
 
 type TextData = {
@@ -85,6 +180,14 @@ type FileData = {
     id: number;
 };
 
+type Block = {
+    totalBytesCount: number,
+    fileName: string,
+    totalBlockCount: number,
+    currentBlockIndex: number,
+    binary: Uint8Array,
+};
+
 @Component({
     selector: "app",
     template: require("raw!./app.html"),
@@ -100,6 +203,8 @@ export class AppComponent {
     dataChannelIsOpen = false;
     dataChannel: RTCDataChannel | null = null;
     canCreateOffer = supportWebRTC;
+    splitFile = new SplitFileForBrowser();
+    files: { [name: string]: Block[] } = {};
     constructor(private sanitizer: DomSanitizer, private zone: NgZone) {
         const hash = document.location.hash;
         let room: string;
@@ -169,14 +274,23 @@ export class AppComponent {
                                 id: this.id++,
                             });
                         } else {
-                            const file = new File([(e.data as Uint8Array)], "no name");
-                            this.acceptMessages.unshift({
-                                kind: "file",
-                                value: file,
-                                url: this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file)),
-                                moment: getNow(),
-                                id: this.id++,
-                            });
+                            const block = this.splitFile.decodeBlock(new Uint8Array(e.data as ArrayBuffer));
+                            if (!this.files[block.fileName]) {
+                                this.files[block.fileName] = [];
+                            }
+                            this.files[block.fileName].push(block);
+                            if (this.files[block.fileName].length === block.totalBlockCount) {
+                                this.files[block.fileName].sort((a, b) => a.currentBlockIndex - b.currentBlockIndex);
+                                const file = new File(this.files[block.fileName].map(f => f.binary), block.fileName);
+                                this.acceptMessages.unshift({
+                                    kind: "file",
+                                    value: file,
+                                    url: this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file)),
+                                    moment: getNow(),
+                                    id: this.id++,
+                                });
+                                delete this.files[block.fileName];
+                            }
                         }
                     });
                 };
@@ -292,10 +406,14 @@ export class AppComponent {
             });
             return;
         }
+        const extensionName = file.type.split("/")[1];
+        const filename = (file as File).name || `no name.${extensionName}`;
         if (this.dataChannelIsOpen) {
-            // todo: split big file into small pieces, then send it one by one, give start and end mark
             blobToUInt8Array(file, uint8Array => {
-                this.dataChannel!.send(uint8Array);
+                const blocks = this.splitFile.split(uint8Array, filename);
+                for (const block of blocks) {
+                    this.dataChannel!.send(block);
+                }
             });
         } else {
             if (file.size >= 10 * 1024 * 1024) {
@@ -307,22 +425,12 @@ export class AppComponent {
                 });
                 return;
             }
-            if ((file as File).name) {
-                this.socket.emit("copy", {
-                    kind: "file",
-                    value: file,
-                    name: (file as File).name,
-                    type: file.type,
-                });
-            } else {
-                const extensionName = file.type.split("/")[1];
-                this.socket.emit("copy", {
-                    kind: "file",
-                    value: file,
-                    name: (file as File).name || `no name.${extensionName}`,
-                    type: file.type,
-                });
-            }
+            this.socket.emit("copy", {
+                kind: "file",
+                value: file,
+                name: filename,
+                type: file.type,
+            });
         }
     }
     trackByMessages(index: number, message: TextData | FileData) {
