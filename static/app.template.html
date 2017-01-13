@@ -18,6 +18,15 @@
         <button class="btn btn-default copy-button" (click)="startToConnect()">start to connect</button>
     </div>
 </div>
+<div class="row" *ngFor="let file of files; trackBy: trackByFiles">
+    <div class="col-md-12">
+        <div class="progress">
+            <div class="progress-bar progress-bar-success" role="progressbar" [attr.aria-valuenow]="file.progress" aria-valuemin="0" aria-valuemax="100" [style.width.%]="file.progress">
+                {{file.fileName}}
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         <file-uploader (fileUploaded)="fileUploaded($event)"

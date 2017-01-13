@@ -181,11 +181,12 @@ type FileData = {
 };
 
 type Block = {
-    totalBytesCount: number,
-    fileName: string,
-    totalBlockCount: number,
-    currentBlockIndex: number,
-    binary: Uint8Array,
+    fileName: string;
+    blocks: {
+        currentBlockIndex: number,
+        binary: Uint8Array,
+    }[];
+    progress: number,
 };
 
 @Component({
@@ -204,7 +205,7 @@ export class AppComponent {
     dataChannel: RTCDataChannel | null = null;
     canCreateOffer = supportWebRTC;
     splitFile = new SplitFileForBrowser();
-    files: { [name: string]: Block[] } = {};
+    files: Block[] = [];
     constructor(private sanitizer: DomSanitizer, private zone: NgZone) {
         const hash = document.location.hash;
         let room: string;
@@ -275,13 +276,24 @@ export class AppComponent {
                             });
                         } else {
                             const block = this.splitFile.decodeBlock(new Uint8Array(e.data as ArrayBuffer));
-                            if (!this.files[block.fileName]) {
-                                this.files[block.fileName] = [];
+                            let currentBlockIndex = this.files.findIndex(f => f.fileName === block.fileName);
+                            if (currentBlockIndex === -1) {
+                                currentBlockIndex = this.files.length;
+                                this.files.push({
+                                    fileName: block.fileName,
+                                    blocks: [],
+                                    progress: 0,
+                                });
                             }
-                            this.files[block.fileName].push(block);
-                            if (this.files[block.fileName].length === block.totalBlockCount) {
-                                this.files[block.fileName].sort((a, b) => a.currentBlockIndex - b.currentBlockIndex);
-                                const file = new File(this.files[block.fileName].map(f => f.binary), block.fileName);
+                            const currentBlock = this.files[currentBlockIndex];
+                            currentBlock.blocks.push({
+                                currentBlockIndex: block.currentBlockIndex,
+                                binary: block.binary,
+                            });
+                            currentBlock.progress = Math.round(currentBlock.blocks.length * 100.0 / block.totalBlockCount);
+                            if (currentBlock.blocks.length === block.totalBlockCount) {
+                                currentBlock.blocks.sort((a, b) => a.currentBlockIndex - b.currentBlockIndex);
+                                const file = new File(currentBlock.blocks.map(f => f.binary), block.fileName);
                                 this.acceptMessages.unshift({
                                     kind: "file",
                                     value: file,
@@ -289,7 +301,7 @@ export class AppComponent {
                                     moment: getNow(),
                                     id: this.id++,
                                 });
-                                delete this.files[block.fileName];
+                                this.files.splice(currentBlockIndex, 1);
                             }
                         }
                     });
@@ -435,5 +447,8 @@ export class AppComponent {
     }
     trackByMessages(index: number, message: TextData | FileData) {
         return message.id;
+    }
+    trackByFiles(index: number, file: Block) {
+        return file.fileName + file.progress;
     }
 }
