@@ -12,6 +12,7 @@ declare class RTCDataChannel {
     send(message: any): void;
     close(): void;
 }
+
 declare class RTCPeerConnection {
     localDescription: RTCSessionDescription;
     ondatachannel: (event: { channel: RTCDataChannel }) => void;
@@ -43,14 +44,6 @@ const supportWebRTC = !!(window as any).RTCPeerConnection;
 
 function getRoom() {
     return Math.round(Math.random() * 35 * Math.pow(36, 9)).toString(36);
-}
-
-function blobToUInt8Array(blob: Blob, next: (uint8Array: Uint8Array) => void) {
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-        next(new Uint8Array(fileReader.result as ArrayBuffer));
-    };
-    fileReader.readAsArrayBuffer(blob);
 }
 
 function getNow() {
@@ -189,6 +182,8 @@ type Block = {
     progress: number,
 };
 
+const worker = new Worker("worker.bundle.js");
+
 @Component({
     template: require("raw!./app.html"),
 })
@@ -202,7 +197,6 @@ class App extends Vue {
     peerConnection = supportWebRTC ? new RTCPeerConnection() : null;
     dataChannelIsOpen = false;
     dataChannel: RTCDataChannel | null = null;
-    canCreateOffer = supportWebRTC;
     splitFile = new SplitFileForBrowser();
     files: Block[] = [];
     constructor(options?: Vue.ComponentOptions<Vue>) {
@@ -303,6 +297,9 @@ class App extends Vue {
             };
         }
     }
+    get canCreateOffer() {
+        return supportWebRTC && !this.dataChannelIsOpen;
+    }
     onGetAnswer(data: { sid: string, answer: types.Desciprtion }) {
         const answer = new RTCSessionDescription(data.answer);
         this.peerConnection!.setRemoteDescription(answer);
@@ -328,7 +325,6 @@ class App extends Vue {
                         .then(offer => this.peerConnection!.setLocalDescription(offer))
                         .then(() => {
                             this.socket.emit("offer", this.peerConnection!.localDescription.toJSON());
-                            this.canCreateOffer = false;
                         });
                 });
         }
@@ -407,14 +403,14 @@ class App extends Vue {
             return;
         }
         const extensionName = file.type.split("/")[1];
-        const filename = (file as File).name || `no name.${extensionName}`;
+        const fileName = (file as File).name || `no name.${extensionName}`;
         if (this.dataChannelIsOpen) {
-            blobToUInt8Array(file, uint8Array => {
-                const blocks = this.splitFile.split(uint8Array, filename);
-                for (const block of blocks) {
-                    this.dataChannel!.send(block);
-                }
-            });
+            const message: types.WorkMessage = {
+                kind: "split file",
+                file,
+                fileName,
+            };
+            worker.postMessage(message);
         } else {
             if (file.size >= 10 * 1024 * 1024) {
                 this.acceptMessages.unshift({
@@ -428,7 +424,7 @@ class App extends Vue {
             this.socket.emit("copy", {
                 kind: "file",
                 value: file,
-                name: filename,
+                name: fileName,
                 type: file.type,
             });
         }
@@ -438,3 +434,12 @@ class App extends Vue {
 const app = new App({
     el: "#body",
 });
+
+worker.onmessage = e => {
+    const message: types.WorkMessage = e.data;
+    if (message.kind === "split file result") {
+        for (const block of message.blocks) {
+            app.dataChannel!.send(block);
+        }
+    }
+};
