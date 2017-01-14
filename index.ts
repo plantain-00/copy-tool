@@ -2,6 +2,7 @@ import * as express from "express";
 import * as socketIO from "socket.io";
 import * as minimist from "minimist";
 const debounce: any = require("lodash.debounce");
+import * as types from "./types";
 
 const app = express();
 const argv = minimist(process.argv.slice(2));
@@ -15,16 +16,6 @@ const server = app.listen(port, host, () => {
 });
 
 const io = socketIO(server);
-
-type CopyData = {
-    kind: "text",
-    value: string,
-} & {
-        kind: "file",
-        value: Buffer,
-        name: string,
-        type: string,
-    };
 
 /**
  * for all sockets, if it joined the room, count it, minus current socket itself
@@ -56,7 +47,7 @@ io.on("connection", socket => {
         // when a client connected, client count changed, and should broadcast it to all clients in the room.
         sendClientCount();
 
-        socket.on("copy", (data: CopyData) => {
+        socket.on("copy", (data: types.CopyData) => {
             // for all sockets, if it joined the room and not current socket, send the message
             for (const socketId in io.sockets.sockets) {
                 const rooms = io.sockets.sockets[socketId].rooms;
@@ -71,7 +62,7 @@ io.on("connection", socket => {
             });
         });
 
-        socket.on("offer", (data: any) => {
+        socket.on("offer", (data: types.Desciprtion) => {
             const json = {
                 sid: socket.id,
                 offer: data,
@@ -86,7 +77,7 @@ io.on("connection", socket => {
             }
         });
 
-        socket.on("answer", (data: { sid: string; answer: any }) => {
+        socket.on("answer", (data: { sid: string; answer: types.Desciprtion }) => {
             io.in(data.sid).emit("answer", {
                 sid: socket.id,
                 answer: data.answer,

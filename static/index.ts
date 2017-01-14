@@ -2,6 +2,7 @@ import * as io from "socket.io-client";
 import * as Vue from "vue";
 import Component from "vue-class-component";
 import * as Clipboard from "clipboard";
+import * as types from "../types";
 
 declare class RTCDataChannel {
     readyState: "open" | "close";
@@ -26,7 +27,7 @@ declare class RTCPeerConnection {
 declare class RTCSessionDescription {
     type: "offer" | "answer";
     sdp: string;
-    constructor(description: { type: "offer", sdp: string; });
+    constructor(description: { type: "offer" | "answer", sdp: string; });
     toJSON(): { type: "offer" | "answer"; sdp: string };
 }
 
@@ -302,21 +303,20 @@ class App extends Vue {
             };
         }
     }
-    onGetAnswer(data: { sid: string, answer: any }) {
+    onGetAnswer(data: { sid: string, answer: types.Desciprtion }) {
         const answer = new RTCSessionDescription(data.answer);
         this.peerConnection!.setRemoteDescription(answer);
     }
-    onGetOffer(data: { sid: string, offer: any }) {
+    onGetOffer(data: { sid: string, offer: types.Desciprtion }) {
         const offer = new RTCSessionDescription(data.offer);
         this.peerConnection!.setRemoteDescription(offer)
             .then(() => this.peerConnection!.createAnswer())
             .then(() => this.peerConnection!.createAnswer())
             .then(answer => this.peerConnection!.setLocalDescription(answer))
             .then(() => {
-                const json = this.peerConnection!.localDescription.toJSON();
                 this.socket.emit("answer", {
                     sid: data.sid,
-                    answer: json,
+                    answer: this.peerConnection!.localDescription.toJSON(),
                 });
             });
     }
@@ -388,10 +388,11 @@ class App extends Vue {
         if (this.dataChannelIsOpen) {
             this.dataChannel!.send(this.newText);
         } else {
-            this.socket.emit("copy", {
+            const copyData: types.CopyData = {
                 kind: "text",
                 value: this.newText,
-            });
+            };
+            this.socket.emit("copy", copyData);
         }
         this.newText = "";
     }
