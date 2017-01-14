@@ -215,7 +215,6 @@ class App extends Vue {
         const offer = new RTCSessionDescription(data.offer);
         this.peerConnection!.setRemoteDescription(offer)
             .then(() => this.peerConnection!.createAnswer())
-            .then(() => this.peerConnection!.createAnswer())
             .then(answer => this.peerConnection!.setLocalDescription(answer))
             .then(() => {
                 this.socket.emit("answer", {
@@ -224,15 +223,12 @@ class App extends Vue {
                 });
             });
     }
-    startToConnect() {
+    tryToConnect() {
         if (this.peerConnection) {
             this.peerConnection.createOffer()
+                .then(offer => this.peerConnection!.setLocalDescription(offer))
                 .then(() => {
-                    this.peerConnection!.createOffer()
-                        .then(offer => this.peerConnection!.setLocalDescription(offer))
-                        .then(() => {
-                            this.socket.emit("offer", this.peerConnection!.localDescription.toJSON());
-                        });
+                    this.socket.emit("offer", this.peerConnection!.localDescription.toJSON());
                 });
         }
     }
