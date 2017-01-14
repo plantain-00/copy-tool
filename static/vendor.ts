@@ -6,3 +6,4 @@ import "file-uploader-component/dist/vue";
 import "webrtc-adapter/out/adapter_no_edge_no_global";
 import "vue-class-component";
 import "vue";
+import "js-split-file/browser";
