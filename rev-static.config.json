@@ -3,7 +3,7 @@
         "static/vendor.bundle.css",
         "static/index.bundle.css",
         "static/vendor.bundle.js",
-        "static/main.bundle.js",
+        "static/index.bundle.js",
         "static/index.ejs.html"
     ],
     "outputFiles": [

@@ -1,50 +1,51 @@
-<div class="row">
-    <div class="col-md-12">
-        <h4>Copy-Tool</h4>
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Copy-Tool</h4>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <textarea class="form-control" rows="5" [(ngModel)]="newText"></textarea>
+    <div class="row">
+        <div class="col-md-12">
+            <textarea class="form-control" rows="5" v-model="newText"></textarea>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <button class="btn btn-primary copy-button" (click)="copyText()">{{buttonText}}</button>
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary copy-button" @click="copyText()">{{buttonText}}</button>
+        </div>
     </div>
-</div>
-<div class="row" *ngIf="canCreateOffer">
-    <div class="col-md-12">
-        <button class="btn btn-default copy-button" (click)="startToConnect()">start to connect</button>
+    <div class="row" v-if="canCreateOffer">
+        <div class="col-md-12">
+            <button class="btn btn-default copy-button" @click="startToConnect()">start to connect</button>
+        </div>
     </div>
-</div>
-<div class="row" *ngFor="let file of files; trackBy: trackByFiles">
-    <div class="col-md-12">
-        <div class="progress">
-            <div class="progress-bar progress-bar-success" role="progressbar" [attr.aria-valuenow]="file.progress" aria-valuemin="0" aria-valuemax="100" [style.width.%]="file.progress">
-                {{file.fileName}}
+    <div class="row" v-for="(file, index) in files">
+        <div class="col-md-12">
+            <div class="progress">
+                <div class="progress-bar progress-bar-success" role="progressbar" :aria-valuenow="file.progress" aria-valuemin="0" aria-valuemax="100"
+                    :style="'width:' + file.progress + '%'">
+                    {{file.fileName}}
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <file-uploader (fileUploaded)="fileUploaded($event)"
-            multiple="true"
-            [locale]="locale">
-        </file-uploader>
+    <div class="row">
+        <div class="col-md-12">
+            <file-uploader @file-uploaded="fileUploaded(arguments[0])" multiple="true" :locale="locale">
+            </file-uploader>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <ul>
-            <li *ngFor="let message of acceptMessages; trackBy:trackByMessages">
-                <span class="label label-default">{{message.moment}}</span>
-                <span class="label label-info">{{message.kind}}</span>
-                <button *ngIf="message.kind === 'text'" class="btn btn-xs btn-default clipboard" attr.data-clipboard-target="#clipboard_{{message.id}}">copy</button>
-                <pre *ngIf="message.kind === 'text'" id="clipboard_{{message.id}}">{{message.value}}</pre>
-                <a *ngIf="message.kind === 'file'" class="btn btn-link" [href]="message.url" [download]="message.value.name">{{message.value.name}}</a>
-            </li>
-        </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <ul>
+                <li v-for="(message, index) in acceptMessages">
+                    <span class="label label-default">{{message.moment}}</span>
+                    <span class="label label-info">{{message.kind}}</span>
+                    <button v-if="message.kind === 'text'" class="btn btn-xs btn-default clipboard" :data-clipboard-target="'#clipboard_' + message.id">copy</button>
+                    <pre v-if="message.kind === 'text'" :id="'clipboard_' + message.id">{{message.value}}</pre>
+                    <a v-if="message.kind === 'file'" class="btn btn-link" :href="message.url" :download="message.value.name">{{message.value.name}}</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>

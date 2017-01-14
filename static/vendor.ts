@@ -1,13 +1,8 @@
-import "core-js/es6";
-import "core-js/es7/reflect";
-import "zone.js/dist/zone";
 import "tslib";
-import "@angular/platform-browser";
-import "@angular/platform-browser-dynamic";
-import "@angular/core";
-import "@angular/forms";
 import "socket.io-client";
 import "qrcode/qrcodeclient";
 import "clipboard";
-import "file-uploader-component/dist/angular";
+import "file-uploader-component/dist/vue";
 import "webrtc-adapter/out/adapter_no_edge_no_global";
+import "vue-class-component";
+import "vue";

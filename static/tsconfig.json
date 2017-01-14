@@ -11,7 +11,6 @@
         "skipLibCheck": true,
         "noEmitHelpers": true,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
         "lib": [
             "es5",
             "dom",

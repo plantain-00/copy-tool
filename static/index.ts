@@ -1,7 +1,6 @@
-import { Component, NgZone } from "@angular/core";
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import * as io from "socket.io-client";
-
+import * as Vue from "vue";
+import Component from "vue-class-component";
 import * as Clipboard from "clipboard";
 
 declare class RTCDataChannel {
@@ -175,7 +174,7 @@ type ArrayBufferData = {
 type FileData = {
     kind: "file";
     value: File;
-    url: SafeResourceUrl;
+    url: string;
     moment: string;
     id: number;
 };
@@ -190,10 +189,9 @@ type Block = {
 };
 
 @Component({
-    selector: "app",
     template: require("raw!./app.html"),
 })
-export class AppComponent {
+class App extends Vue {
     acceptMessages: (TextData | FileData)[] = [];
     newText: string = "";
     id: number = 1;
@@ -206,7 +204,8 @@ export class AppComponent {
     canCreateOffer = supportWebRTC;
     splitFile = new SplitFileForBrowser();
     files: Block[] = [];
-    constructor(private sanitizer: DomSanitizer, private zone: NgZone) {
+    constructor(options?: Vue.ComponentOptions<Vue>) {
+        super();
         const hash = document.location.hash;
         let room: string;
         if (!hash || hash === "#") {
@@ -244,76 +243,70 @@ export class AppComponent {
             this.dataChannel = this.peerConnection.createDataChannel("copy_tool_channel_name");
             this.peerConnection.ondatachannel = event => {
                 event.channel.onopen = e => {
-                    this.zone.run(() => {
-                        this.dataChannelIsOpen = true;
-                        this.acceptMessages.unshift({
-                            kind: "text",
-                            value: `The connection is opened.`,
-                            moment: getNow(),
-                            id: this.id++,
-                        });
+                    app.dataChannelIsOpen = true;
+                    this.acceptMessages.unshift({
+                        kind: "text",
+                        value: `The connection is opened.`,
+                        moment: getNow(),
+                        id: this.id++,
                     });
                 };
                 event.channel.onclose = e => {
-                    this.zone.run(() => {
-                        this.dataChannelIsOpen = false;
-                        this.acceptMessages.unshift({
-                            kind: "text",
-                            value: `The connection is closed.`,
-                            moment: getNow(),
-                            id: this.id++,
-                        });
+                    app.dataChannelIsOpen = false;
+                    this.acceptMessages.unshift({
+                        kind: "text",
+                        value: `The connection is closed.`,
+                        moment: getNow(),
+                        id: this.id++,
                     });
                 };
                 event.channel.onmessage = e => {
-                    this.zone.run(() => {
-                        if (typeof e.data === "string") {
+                    if (typeof e.data === "string") {
+                        this.acceptMessages.unshift({
+                            kind: "text",
+                            value: e.data,
+                            moment: getNow(),
+                            id: this.id++,
+                        });
+                    } else {
+                        const block = this.splitFile.decodeBlock(new Uint8Array(e.data as ArrayBuffer));
+                        let currentBlockIndex = this.files.findIndex(f => f.fileName === block.fileName);
+                        if (currentBlockIndex === -1) {
+                            currentBlockIndex = this.files.length;
+                            this.files.push({
+                                fileName: block.fileName,
+                                blocks: [],
+                                progress: 0,
+                            });
+                        }
+                        const currentBlock = this.files[currentBlockIndex];
+                        currentBlock.blocks.push({
+                            currentBlockIndex: block.currentBlockIndex,
+                            binary: block.binary,
+                        });
+                        currentBlock.progress = Math.round(currentBlock.blocks.length * 100.0 / block.totalBlockCount);
+                        if (currentBlock.blocks.length === block.totalBlockCount) {
+                            currentBlock.blocks.sort((a, b) => a.currentBlockIndex - b.currentBlockIndex);
+                            const file = new File(currentBlock.blocks.map(f => f.binary), block.fileName);
                             this.acceptMessages.unshift({
-                                kind: "text",
-                                value: e.data,
+                                kind: "file",
+                                value: file,
+                                url: URL.createObjectURL(file),
                                 moment: getNow(),
                                 id: this.id++,
                             });
-                        } else {
-                            const block = this.splitFile.decodeBlock(new Uint8Array(e.data as ArrayBuffer));
-                            let currentBlockIndex = this.files.findIndex(f => f.fileName === block.fileName);
-                            if (currentBlockIndex === -1) {
-                                currentBlockIndex = this.files.length;
-                                this.files.push({
-                                    fileName: block.fileName,
-                                    blocks: [],
-                                    progress: 0,
-                                });
-                            }
-                            const currentBlock = this.files[currentBlockIndex];
-                            currentBlock.blocks.push({
-                                currentBlockIndex: block.currentBlockIndex,
-                                binary: block.binary,
-                            });
-                            currentBlock.progress = Math.round(currentBlock.blocks.length * 100.0 / block.totalBlockCount);
-                            if (currentBlock.blocks.length === block.totalBlockCount) {
-                                currentBlock.blocks.sort((a, b) => a.currentBlockIndex - b.currentBlockIndex);
-                                const file = new File(currentBlock.blocks.map(f => f.binary), block.fileName);
-                                this.acceptMessages.unshift({
-                                    kind: "file",
-                                    value: file,
-                                    url: this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file)),
-                                    moment: getNow(),
-                                    id: this.id++,
-                                });
-                                this.files.splice(currentBlockIndex, 1);
-                            }
+                            this.files.splice(currentBlockIndex, 1);
                         }
-                    });
+                    }
                 };
             };
         }
     }
-    onGetAnswer = (data: { sid: string, answer: any }) => {
+    onGetAnswer(data: { sid: string, answer: any }) {
         const answer = new RTCSessionDescription(data.answer);
         this.peerConnection!.setRemoteDescription(answer);
     }
-    onGetOffer = (data: { sid: string, offer: any }) => {
+    onGetOffer(data: { sid: string, offer: any }) {
         const offer = new RTCSessionDescription(data.offer);
         this.peerConnection!.setRemoteDescription(offer)
             .then(() => this.peerConnection!.createAnswer())
@@ -327,7 +320,7 @@ export class AppComponent {
                 });
             });
     }
-    startToConnect = () => {
+    startToConnect() {
         if (this.peerConnection) {
             this.peerConnection.createOffer()
                 .then(() => {
@@ -340,38 +333,32 @@ export class AppComponent {
                 });
         }
     }
-    onMessageRecieved = (data: TextData | ArrayBufferData) => {
-        this.zone.run(() => {
-            if (data.kind === "file") {
-                const file = new File([data.value], data.name, { type: data.type });
-                this.acceptMessages.unshift({
-                    kind: "file",
-                    value: file,
-                    url: this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file)),
-                    moment: getNow(),
-                    id: this.id++,
-                });
-            } else {
-                data.moment = getNow();
-                data.id = this.id++;
-                this.acceptMessages.unshift(data);
-            }
-        });
-    }
-    onMessageSent = (data: { kind: "text" | "file" }) => {
-        this.zone.run(() => {
+    onMessageRecieved(data: TextData | ArrayBufferData) {
+        if (data.kind === "file") {
+            const file = new File([data.value], data.name, { type: data.type });
             this.acceptMessages.unshift({
-                kind: "text",
-                value: `the ${data.kind} is sent successfully to ${this.clientCount} clients.`,
+                kind: "file",
+                value: file,
+                url: URL.createObjectURL(file),
                 moment: getNow(),
                 id: this.id++,
             });
+        } else {
+            data.moment = getNow();
+            data.id = this.id++;
+            this.acceptMessages.unshift(data);
+        }
+    }
+    onMessageSent(data: { kind: "text" | "file" }) {
+        this.acceptMessages.unshift({
+            kind: "text",
+            value: `the ${data.kind} is sent successfully to ${this.clientCount} clients.`,
+            moment: getNow(),
+            id: this.id++,
         });
     }
-    onClientCount = (data: { clientCount: number }) => {
-        this.zone.run(() => {
-            this.clientCount = data.clientCount;
-        });
+    onClientCount(data: { clientCount: number }) {
+        this.clientCount = data.clientCount;
     }
     get buttonText() {
         if (this.clientCount > 0) {
@@ -445,10 +432,8 @@ export class AppComponent {
             });
         }
     }
-    trackByMessages(index: number, message: TextData | FileData) {
-        return message.id;
-    }
-    trackByFiles(index: number, file: Block) {
-        return file.fileName + file.progress;
-    }
 }
+
+const app = new App({
+    el: "#body",
+});

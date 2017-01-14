@@ -2,7 +2,7 @@ const webpack = require("webpack");
 
 module.exports = {
     entry: {
-        main: "./static/main",
+        index: "./static/index",
         vendor: "./static/vendor"
     },
     output: {
@@ -25,7 +25,12 @@ module.exports = {
             },
         }),
         new webpack.optimize.CommonsChunkPlugin({
-            name: ["main", "vendor"]
+            name: ["index", "vendor"]
         })
-    ]
+    ],
+    resolve: {
+        alias: {
+            "vue$": "vue/dist/vue.min.js"
+        }
+    }
 };
