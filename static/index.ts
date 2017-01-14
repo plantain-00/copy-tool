@@ -105,6 +105,7 @@ class App extends Vue {
     dataChannel: RTCDataChannel | null = null;
     splitFile = new SplitFile();
     files: Block[] = [];
+    speed = 100;
     constructor(options?: Vue.ComponentOptions<Vue>) {
         super();
         const hash = document.location.hash;
@@ -341,11 +342,19 @@ const app = new App({
     el: "#body",
 });
 
+const blocks: Uint8Array[] = [];
+
+setInterval(() => {
+    if (blocks.length > 0) {
+        blocks.splice(0, app.speed).forEach(block => {
+            app.dataChannel!.send(block);
+        });
+    }
+}, 1000);
+
 worker.onmessage = e => {
     const message: types.WorkMessage = e.data;
     if (message.kind === "split file result") {
-        for (const block of message.blocks) {
-            app.dataChannel!.send(block);
-        }
+        blocks.push(...message.blocks);
     }
 };
