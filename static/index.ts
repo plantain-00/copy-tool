@@ -91,7 +91,7 @@ type Block = {
 const worker = new Worker("worker.bundle.js");
 
 @Component({
-    template: require("raw!./app.html"),
+    template: require("raw-loader!./app.html"),
 })
 class App extends Vue {
     acceptMessages: (TextData | FileData)[] = [];
