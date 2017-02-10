@@ -88,6 +88,27 @@ type Block = {
     progress: number,
 };
 
+declare class Notification {
+    static permission: "granted" | "denied" | "default";
+    static requestPermission(next: (permission: "granted" | "denied" | "default") => void): void;
+    constructor(title: string);
+}
+
+function notify(title: string) {
+    if (!("Notification" in window)) {
+        return;
+    }
+    if (Notification.permission === "granted") {
+        new Notification(title);
+    } else if (Notification.permission !== "denied") {
+        Notification.requestPermission(permission => {
+            if (permission === "granted") {
+                new Notification(title);
+            }
+        });
+    }
+}
+
 const worker = new Worker("worker.bundle.js");
 
 @Component({
@@ -170,6 +191,7 @@ class App extends Vue {
                             moment: getNow(),
                             id: this.id++,
                         });
+                        notify("You got a text message!");
                     } else {
                         const block = this.splitFile.decodeBlock(new Uint8Array(e.data as ArrayBuffer));
                         let currentBlockIndex = this.files.findIndex(f => f.fileName === block.fileName);
@@ -198,6 +220,7 @@ class App extends Vue {
                                 id: this.id++,
                             });
                             this.files.splice(currentBlockIndex, 1);
+                            notify("You got a file!");
                         }
                     }
                 };
@@ -242,10 +265,12 @@ class App extends Vue {
                 moment: getNow(),
                 id: this.id++,
             });
+            notify("You got a file!");
         } else {
             data.moment = getNow();
             data.id = this.id++;
             this.acceptMessages.unshift(data);
+            notify("You got a text message!");
         }
     }
     onMessageSent(data: { kind: "text" | "file" }) {
