@@ -1,0 +1,36 @@
+{
+  "name": "CopyTool",
+  "short_name": "Copy",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "blue",
+  "theme_color": "blue",
+  "icons": [
+    {
+      "src": "images/copy48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "images/copy64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "images/copy72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "images/copy96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "images/copy128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ],
+  "description": "A tool to copy text or file from one place, and get it from another place."
+}

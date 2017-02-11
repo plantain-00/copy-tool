@@ -1,5 +1,4 @@
 import * as types from "../types";
-import "tslib";
 import {SplitFile} from "js-split-file/browser";
 
 const splitFile = new SplitFile();
