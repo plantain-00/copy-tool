@@ -32,7 +32,7 @@ declare const caches: {
 
 const versions = require("./version.json");
 
-const version = "v1";
+const version = "v2";
 
 function run(this: any) {
     this.addEventListener("install", (event: InstallEvent) => {

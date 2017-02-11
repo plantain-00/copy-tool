@@ -9,7 +9,7 @@
     "clean-rev": "rm -f static/vendor.bundle-*.js static/vendor.bundle-*.css static/index.bundle-*.js static/index.bundle-*.css",
     "rev": "npm run clean-rev && rev-static",
     "build": "tsc",
-    "build-static": "npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && npm run minifier-template && webpack --display-modules && webpack --display-modules --config webpack.config.worker.js && npm run rev",
+    "build-static": "npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && npm run minifier-template && webpack --display-modules && npm run rev && webpack --display-modules --config webpack.config.worker.js",
     "lint": "tslint index.ts \"static/*.ts\"",
     "minifier-template": "html-minifier --collapse-whitespace --case-sensitive static/app.template.html -o static/app.html"
   },
