@@ -2,7 +2,8 @@ const webpack = require("webpack");
 
 module.exports = {
     entry: {
-        worker: "./static/worker"
+        worker: "./static/worker",
+        "service-worker": "./static/service-worker"
     },
     output: {
         filename: "static/[name].bundle.js"
@@ -21,9 +22,6 @@ module.exports = {
             output: {
                 comments: false,
             },
-        }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: ["worker"]
         })
     ]
 };

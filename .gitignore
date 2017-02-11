@@ -42,3 +42,4 @@ index.js
 app.html
 static/*bundle*
 index.html
+static/version.json
