@@ -9,7 +9,7 @@
     "clean-rev": "rm -f static/vendor.bundle-*.js static/vendor.bundle-*.css static/index.bundle-*.js static/index.bundle-*.css",
     "rev": "npm run clean-rev && rev-static",
     "build": "tsc",
-    "build-static": "npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && npm run minifier-template && webpack --display-modules && npm run rev && webpack --display-modules --config webpack.config.worker.js",
+    "build-static": "npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && npm run minifier-template && webpack --display-modules && webpack --display-modules --config webpack.config.worker.js && npm run rev && webpack --display-modules --config webpack.config.service-worker.js",
     "lint": "tslint index.ts \"static/*.ts\"",
     "minifier-template": "html-minifier --collapse-whitespace --case-sensitive static/app.template.html -o static/app.html"
   },
@@ -45,7 +45,7 @@
     "js-split-file": "1.1.5",
     "qrcode": "0.5.0",
     "raw-loader": "0.5.1",
-    "rev-static": "1.3.1",
+    "rev-static": "2.0.1",
     "socket.io-client": "1.7.2",
     "tslib": "1.5.0",
     "tslint": "4.4.2",

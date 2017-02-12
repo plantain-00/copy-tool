@@ -2,7 +2,7 @@ const webpack = require("webpack");
 
 module.exports = {
     entry: {
-        worker: "./static/worker"
+        "service-worker": "./static/service-worker"
     },
     output: {
         filename: "static/[name].bundle.js"

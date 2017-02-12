@@ -30,26 +30,28 @@ declare const caches: {
     match(request: Request | string, options?: Partial<{ ignoreSearch: boolean; ignoreMethod: boolean; ignoreVary: boolean; cacheName: string }>): Promise<Response>;
 };
 
-const versions = require("./version.json");
+const versions: {
+    staticVendorBundleCss: string;
+    staticIndexBundleCss: string;
+    staticVendorBundleJs: string;
+    staticIndexBundleJs: string;
+    staticWorkerBundleJs: string;
+    staticIndexHtml: string;
+} = require("./version.json");
 
-const version = "v2";
+const rootUrl = location.origin + location.pathname.substring(0, location.pathname.lastIndexOf("/") + 1);
+
+const cacheMappers = [
+    { cacheName: rootUrl + versions.staticIndexHtml, url: rootUrl },
+    { cacheName: rootUrl + versions.staticIndexHtml, url: rootUrl + "index.html" },
+    { cacheName: rootUrl + versions.staticVendorBundleCss, url: rootUrl + versions.staticVendorBundleCss },
+    { cacheName: rootUrl + versions.staticIndexBundleCss, url: rootUrl + versions.staticIndexBundleCss },
+    { cacheName: rootUrl + versions.staticVendorBundleJs, url: rootUrl + versions.staticVendorBundleJs },
+    { cacheName: rootUrl + versions.staticIndexBundleJs, url: rootUrl + versions.staticIndexBundleJs },
+    { cacheName: rootUrl + versions.staticWorkerBundleJs, url: rootUrl + "worker.bundle.js" },
+];
 
 function run(this: any) {
-    this.addEventListener("install", (event: InstallEvent) => {
-        event.waitUntil(
-            caches.open(version).then(cache => {
-                return cache.addAll([
-                    "/",
-                    "/index.html",
-                    "/" + versions.staticVendorBundleCss,
-                    "/" + versions.staticIndexBundleCss,
-                    "/" + versions.staticVendorBundleJs,
-                    "/" + versions.staticIndexBundleJs,
-                ]);
-            }),
-        );
-    });
-
     this.addEventListener("fetch", (event: FetchEvent) => {
         if (!event.request.url.startsWith("http")) {
             return;
@@ -60,7 +62,12 @@ function run(this: any) {
                     return responseInCache;
                 }
                 return fetch(event.request).then(response => {
-                    caches.open(version).then(cache => {
+                    const cacheMapper = cacheMappers.find(c => c.url === event.request.url);
+                    if (!cacheMapper) {
+                        return response;
+                    }
+
+                    caches.open(cacheMapper.cacheName).then(cache => {
                         cache.put(event.request, response);
                     });
                     return response.clone();
@@ -74,7 +81,7 @@ function run(this: any) {
     this.addEventListener("activate", (event: ActivateEvent) => {
         event.waitUntil(
             caches.keys().then(keyList => {
-                return Promise.all(keyList.filter(key => key !== version).map(key => caches.delete(key)));
+                return Promise.all(keyList.filter(key => cacheMappers.findIndex(c => c.cacheName === key) === -1).map(key => caches.delete(key)));
             }),
         );
     });
