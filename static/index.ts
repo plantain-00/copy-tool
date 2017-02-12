@@ -109,6 +109,17 @@ function notify(title: string) {
     }
 }
 
+function getCookie(name: string) {
+    const cookieStrings = document.cookie.split(";");
+    for (const cookieString of cookieStrings) {
+        const tmp = cookieString.trim().split("=");
+        if (tmp[0] === name) {
+            return tmp[1];
+        }
+    }
+    return "";
+}
+
 const worker = new Worker("worker.bundle.js");
 
 @Component({
@@ -131,12 +142,18 @@ class App extends Vue {
         super();
         const hash = document.location.hash;
         let room: string;
-        if (!hash || hash === "#") {
-            room = getRoom();
-            document.location.hash = "#" + room;
-        } else {
+        if (hash && hash !== "#") {
             room = hash.substr(1);
+        } else {
+            const roomIncookie = getCookie("room");
+            if (roomIncookie) {
+                room = roomIncookie;
+            } else {
+                room = getRoom();
+            }
+            document.location.hash = "#" + room;
         }
+
         const connect = () => {
             this.socket = io("/", { query: { room } });
             this.socket.on("copy", this.onMessageRecieved);
@@ -146,6 +163,7 @@ class App extends Vue {
                 this.socket.on("offer", this.onGetOffer);
                 this.socket.on("answer", this.onGetAnswer);
             }
+            document.cookie = `room=${room}`;
             drawQRCode();
         };
         connect();
