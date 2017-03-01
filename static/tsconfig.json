@@ -10,6 +10,7 @@
         "skipLibCheck": true,
         "noEmitHelpers": true,
         "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
         "lib": [
             "es5",
             "dom",
