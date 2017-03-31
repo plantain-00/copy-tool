@@ -55,6 +55,7 @@ function drawQRCode() {
     });
 }
 
+/*tslint:disable no-unused-expression */
 new Clipboard(".clipboard");
 
 type TextData = {

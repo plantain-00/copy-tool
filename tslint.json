@@ -23,7 +23,6 @@
             "ban-keywords"
         ],
         "no-bitwise": false,
-        "no-unused-new": false,
         "member-access": false,
         "arrow-parens": false,
         "array-type": [
