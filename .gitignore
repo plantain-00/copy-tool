@@ -43,3 +43,5 @@ app.html
 static/*bundle*
 index.html
 static/version.json
+!*.config.js
+!*.config.*.js
