@@ -3,7 +3,6 @@
         "target": "es6",
         "module": "commonjs",
 
-        "outDir": ".",
         "declaration": false,
 
         "strict": true,
@@ -15,9 +14,5 @@
         "jsx": "react",
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true
-    },
-    "exclude": [
-        "static/",
-        "node_modules/"
-    ]
+    }
 }
