@@ -1,15 +1,20 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
         "target": "es6",
-        "noImplicitAny": true,
-        "sourceMap": true,
+        "module": "commonjs",
+
+        "outDir": ".",
+        "declaration": false,
+
+        "strict": true,
         "noUnusedLocals": true,
-        "noImplicitThis": true,
-        "strictNullChecks": true,
         "noImplicitReturns": true,
+
         "skipLibCheck": true,
-        "noEmitHelpers": true
+        "importHelpers": true,
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true
     },
     "exclude": [
         "static/",
