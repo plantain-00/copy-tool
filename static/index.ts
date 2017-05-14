@@ -4,6 +4,7 @@ import Component from "vue-class-component";
 import * as Clipboard from "clipboard";
 import * as types from "../types";
 import { SplitFile } from "js-split-file/browser";
+import { staticAppTemplateHtml } from "./variables";
 
 declare class RTCDataChannel {
     readyState: "open" | "close";
@@ -124,7 +125,7 @@ function getCookie(name: string) {
 const worker = new Worker("worker.bundle.js");
 
 @Component({
-    template: require("raw-loader!./app.html"),
+    template: staticAppTemplateHtml,
 })
 class App extends Vue {
     acceptMessages: (TextData | FileData)[] = [];
