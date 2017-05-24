@@ -48,8 +48,10 @@ function getNow() {
     return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
 }
 
+const QRCode = require("qrcode");
+
 function drawQRCode() {
-    new QRCodeLib.QRCodeDraw().draw(document.getElementById("qr") as HTMLCanvasElement, document.location.href, (error: Error) => {
+    QRCode.toCanvas(document.getElementById("qr"), document.location.href, (error: Error) => {
         if (error) {
             console.log(error);
         }
@@ -58,6 +60,7 @@ function drawQRCode() {
 
 /*tslint:disable no-unused-expression */
 new Clipboard(".clipboard");
+/*tslint:enable no-unused-expression */
 
 type TextData = {
     kind: "text";
@@ -101,11 +104,15 @@ function notify(title: string) {
         return;
     }
     if (Notification.permission === "granted") {
+        /*tslint:disable no-unused-expression */
         new Notification(title);
+        /*tslint:enable no-unused-expression */
     } else if (Notification.permission !== "denied") {
         Notification.requestPermission(permission => {
             if (permission === "granted") {
+                /*tslint:disable no-unused-expression */
                 new Notification(title);
+                /*tslint:enable no-unused-expression */
             }
         });
     }
@@ -129,7 +136,7 @@ const worker = new Worker("worker.bundle.js");
 })
 class App extends Vue {
     acceptMessages: (TextData | FileData)[] = [];
-    newText: string = "";
+    newText = "";
     id: number = 1;
     locale = navigator.language;
     socket: SocketIOClient.Socket;

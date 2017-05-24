@@ -8,9 +8,11 @@
     "bundle-index-css": "cleancss static/index.css -o static/index.bundle.css",
     "clean-rev": "rimraf static/vendor.bundle-*.js static/vendor.bundle-*.css static/index.bundle-*.js static/index.bundle-*.css",
     "rev": "npm run clean-rev && rev-static --config static/rev-static.config.js",
-    "build": "npm run file2variable && tsc && npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && webpack --display-modules --config static/webpack.config.js && webpack --display-modules --config static/webpack.config.worker.js && npm run rev && webpack --display-modules --config static/webpack.config.service-worker.js",
+    "build": "npm run file2variable && tsc && npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && webpack --config static/webpack.config.js && webpack --config static/webpack.config.worker.js && npm run rev && npm run sw-precache",
     "lint": "tslint index.ts \"static/*.ts\"",
-    "file2variable": "file2variable-cli static/app.template.html -o static/variables.ts --html-minify"
+    "file2variable": "file2variable-cli static/app.template.html -o static/variables.ts --html-minify",
+    "sw-precache": "sw-precache --config static/sw-precache.config.js && npm run uglifyjs",
+    "uglifyjs": "uglifyjs static/service-worker.js -o static/service-worker.bundle.js"
   },
   "repository": {
     "type": "git",
@@ -32,7 +34,6 @@
     "@types/clipboard": "1.5.33",
     "@types/express": "4.0.35",
     "@types/minimist": "1.2.0",
-    "@types/qrcode": "0.0.2",
     "@types/socket.io": "1.4.29",
     "@types/socket.io-client": "1.4.29",
     "bootstrap": "3.3.7",
@@ -46,9 +47,11 @@
     "rev-static": "2.1.2",
     "rimraf": "2.6.1",
     "socket.io-client": "1.7.3",
+    "sw-precache": "5.1.1",
     "tslib": "1.6.1",
     "tslint": "5.1.0",
     "typescript": "2.3.2",
+    "uglify-js": "3.0.11",
     "vue": "2.3.0",
     "vue-class-component": "5.0.1",
     "webpack": "2.4.1",
