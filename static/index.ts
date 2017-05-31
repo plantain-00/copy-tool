@@ -154,12 +154,7 @@ class App extends Vue {
         if (hash && hash !== "#") {
             room = hash.substr(1);
         } else {
-            const roomIncookie = getCookie("room");
-            if (roomIncookie) {
-                room = roomIncookie;
-            } else {
-                room = getRoom();
-            }
+            room = getCookie("room") || getRoom();
             document.location.hash = "#" + room;
         }
 
