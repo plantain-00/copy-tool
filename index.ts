@@ -1,17 +1,19 @@
 import * as express from "express";
 import * as socketIO from "socket.io";
 import * as minimist from "minimist";
+// tslint:disable-next-line:no-var-requires
 const debounce: any = require("lodash.debounce");
 import * as types from "./types";
 
 const app = express();
 const argv = minimist(process.argv.slice(2));
-const port = argv["p"] || 8000;
-const host = argv["h"] || "localhost";
+const port = argv.p || 8000;
+const host = argv.h || "localhost";
 
 app.use(express.static(__dirname + "/static"));
 
 const server = app.listen(port, host, () => {
+    // tslint:disable-next-line:no-console
     console.log(`api Server is listening: ${host}:${port}`);
 });
 
@@ -23,9 +25,11 @@ const io = socketIO(server);
 function getClientCount(room: string) {
     let clientCount = 0;
     for (const socketId in io.sockets.sockets) {
-        const rooms = io.sockets.sockets[socketId].rooms;
-        if (rooms[room] !== undefined) {
-            clientCount++;
+        if (io.sockets.sockets.hasOwnProperty(socketId)) {
+            const rooms = io.sockets.sockets[socketId].rooms;
+            if (rooms[room] !== undefined) {
+                clientCount++;
+            }
         }
     }
     return clientCount - 1;
@@ -50,10 +54,12 @@ io.on("connection", socket => {
         socket.on("copy", (data: types.CopyData) => {
             // for all sockets, if it joined the room and not current socket, send the message
             for (const socketId in io.sockets.sockets) {
-                const rooms = io.sockets.sockets[socketId].rooms;
-                if (rooms[room] !== undefined
-                    && socketId !== socket.id) {
-                    io.in(socketId).emit("copy", data);
+                if (io.sockets.sockets.hasOwnProperty(socketId)) {
+                    const rooms = io.sockets.sockets[socketId].rooms;
+                    if (rooms[room] !== undefined
+                        && socketId !== socket.id) {
+                        io.in(socketId).emit("copy", data);
+                    }
                 }
             }
             // notify to sender if message is sent successfully
@@ -69,10 +75,12 @@ io.on("connection", socket => {
             };
             // for all sockets, if it joined the room and not current socket, send the offer
             for (const socketId in io.sockets.sockets) {
-                const rooms = io.sockets.sockets[socketId].rooms;
-                if (rooms[room] !== undefined
-                    && socketId !== socket.id) {
-                    io.in(socketId).emit("offer", json);
+                if (io.sockets.sockets.hasOwnProperty(socketId)) {
+                    const rooms = io.sockets.sockets[socketId].rooms;
+                    if (rooms[room] !== undefined
+                        && socketId !== socket.id) {
+                        io.in(socketId).emit("offer", json);
+                    }
                 }
             }
         });

@@ -48,19 +48,20 @@ function getNow() {
     return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
 }
 
+// tslint:disable-next-line:no-var-requires
 const QRCode = require("qrcode");
 
 function drawQRCode() {
     QRCode.toCanvas(document.getElementById("qr"), document.location.href, (error: Error) => {
         if (error) {
+            // tslint:disable-next-line:no-console
             console.log(error);
         }
     });
 }
 
-/*tslint:disable no-unused-expression */
+// tslint:disable-next-line:no-unused-expression
 new Clipboard(".clipboard");
-/*tslint:enable no-unused-expression */
 
 type TextData = {
     kind: "text";
@@ -104,15 +105,13 @@ function notify(title: string) {
         return;
     }
     if (Notification.permission === "granted") {
-        /*tslint:disable no-unused-expression */
+        // tslint:disable-next-line:no-unused-expression
         new Notification(title);
-        /*tslint:enable no-unused-expression */
     } else if (Notification.permission !== "denied") {
         Notification.requestPermission(permission => {
             if (permission === "granted") {
-                /*tslint:disable no-unused-expression */
+                // tslint:disable-next-line:no-unused-expression
                 new Notification(title);
-                /*tslint:enable no-unused-expression */
             }
         });
     }
@@ -404,6 +403,7 @@ worker.onmessage = e => {
 
 if (navigator.serviceWorker) {
     navigator.serviceWorker.register("service-worker.bundle.js").catch(error => {
+        // tslint:disable-next-line:no-console
         console.log("registration failed with error: " + error);
     });
 }
