@@ -48,8 +48,7 @@ function getNow() {
     return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
 }
 
-// tslint:disable-next-line:no-var-requires
-const QRCode = require("qrcode");
+import * as QRCode from "qrcode";
 
 function drawQRCode() {
     QRCode.toCanvas(document.getElementById("qr"), document.location.href, (error: Error) => {
