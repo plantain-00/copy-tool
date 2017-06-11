@@ -340,7 +340,7 @@ class App extends Vue {
         }
         this.newText = "";
     }
-    fileUploaded(file: File | Blob) {
+    fileGot(file: File | Blob) {
         if (this.clientCount <= 0) {
             this.acceptMessages.unshift({
                 kind: "text",
