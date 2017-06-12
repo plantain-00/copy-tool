@@ -1,8 +1,7 @@
 import * as express from "express";
 import * as socketIO from "socket.io";
 import * as minimist from "minimist";
-// tslint:disable-next-line:no-var-requires
-const debounce: any = require("lodash.debounce");
+import debounce = require("lodash.debounce");
 import * as types from "./types";
 
 const app = express();
