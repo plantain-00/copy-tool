@@ -14,13 +14,13 @@ function blobToUInt8Array(blob: Blob, next: (uint8Array: Uint8Array) => void) {
 onmessage = e => {
     const message: types.WorkMessage = e.data;
     const startTime = Date.now();
-    if (message.kind === "split file") {
+    if (message.kind === types.MessageKind.splitFile) {
         blobToUInt8Array(message.file, uint8Array => {
             const blocks = splitFile.split(uint8Array, message.fileName);
             // tslint:disable-next-line:no-console
             console.log(`cost ${(Date.now() - startTime) / 1000.0} s`);
             const result: types.WorkMessage = {
-                kind: "split file result",
+                kind: types.MessageKind.splitFileResult,
                 blocks,
             };
             postMessage(result, undefined as any);

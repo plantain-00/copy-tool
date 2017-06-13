@@ -62,22 +62,27 @@ function drawQRCode() {
 // tslint:disable-next-line:no-unused-expression
 new Clipboard(".clipboard");
 
+const enum DataKind {
+    text = "text",
+    file = "file",
+}
+
 type TextData = {
-    kind: "text";
+    kind: DataKind.text;
     value: string;
     moment?: string;
     id?: number;
 };
 
 type ArrayBufferData = {
-    kind: "file";
+    kind: DataKind.file;
     value: ArrayBuffer;
     name: string;
     type: string;
 };
 
 type FileData = {
-    kind: "file";
+    kind: DataKind.file;
     value: File;
     url: string;
     moment: string;
@@ -188,7 +193,7 @@ class App extends Vue {
                 event.channel.onopen = e => {
                     app.dataChannelIsOpen = true;
                     this.acceptMessages.unshift({
-                        kind: "text",
+                        kind: DataKind.text,
                         value: `The connection is opened.`,
                         moment: getNow(),
                         id: this.id++,
@@ -197,7 +202,7 @@ class App extends Vue {
                 event.channel.onclose = e => {
                     app.dataChannelIsOpen = false;
                     this.acceptMessages.unshift({
-                        kind: "text",
+                        kind: DataKind.text,
                         value: `The connection is closed.`,
                         moment: getNow(),
                         id: this.id++,
@@ -206,7 +211,7 @@ class App extends Vue {
                 event.channel.onmessage = e => {
                     if (typeof e.data === "string") {
                         this.acceptMessages.unshift({
-                            kind: "text",
+                            kind: DataKind.text,
                             value: e.data,
                             moment: getNow(),
                             id: this.id++,
@@ -233,7 +238,7 @@ class App extends Vue {
                             currentBlock.blocks.sort((a, b) => a.currentBlockIndex - b.currentBlockIndex);
                             const file = new File(currentBlock.blocks.map(f => f.binary), block.fileName);
                             this.acceptMessages.unshift({
-                                kind: "file",
+                                kind: DataKind.file,
                                 value: file,
                                 url: URL.createObjectURL(file),
                                 moment: getNow(),
@@ -276,10 +281,10 @@ class App extends Vue {
         }
     }
     onMessageRecieved(data: TextData | ArrayBufferData) {
-        if (data.kind === "file") {
+        if (data.kind === DataKind.file) {
             const file = new File([data.value], data.name, { type: data.type });
             this.acceptMessages.unshift({
-                kind: "file",
+                kind: DataKind.file,
                 value: file,
                 url: URL.createObjectURL(file),
                 moment: getNow(),
@@ -293,9 +298,9 @@ class App extends Vue {
             notify("You got a text message!");
         }
     }
-    onMessageSent(data: { kind: "text" | "file" }) {
+    onMessageSent(data: { kind: DataKind }) {
         this.acceptMessages.unshift({
-            kind: "text",
+            kind: DataKind.text,
             value: `the ${data.kind} is sent successfully to ${this.clientCount} clients.`,
             moment: getNow(),
             id: this.id++,
@@ -313,7 +318,7 @@ class App extends Vue {
     copyText() {
         if (this.clientCount <= 0) {
             this.acceptMessages.unshift({
-                kind: "text",
+                kind: DataKind.text,
                 value: "No clients to sent.",
                 moment: getNow(),
                 id: this.id++,
@@ -322,7 +327,7 @@ class App extends Vue {
         }
         if (!this.newText) {
             this.acceptMessages.unshift({
-                kind: "text",
+                kind: DataKind.text,
                 value: "No text to sent.",
                 moment: getNow(),
                 id: this.id++,
@@ -333,7 +338,7 @@ class App extends Vue {
             this.dataChannel!.send(this.newText);
         } else {
             const copyData: types.CopyData = {
-                kind: "text",
+                kind: types.DataKind.text,
                 value: this.newText,
             };
             this.socket.emit("copy", copyData);
@@ -343,7 +348,7 @@ class App extends Vue {
     fileGot(file: File | Blob) {
         if (this.clientCount <= 0) {
             this.acceptMessages.unshift({
-                kind: "text",
+                kind: DataKind.text,
                 value: "No clients to sent.",
                 moment: getNow(),
                 id: this.id++,
@@ -354,7 +359,7 @@ class App extends Vue {
         const fileName = (file as File).name || `no name.${extensionName}`;
         if (this.dataChannelIsOpen) {
             const message: types.WorkMessage = {
-                kind: "split file",
+                kind: types.MessageKind.splitFile,
                 file,
                 fileName,
             };
@@ -362,7 +367,7 @@ class App extends Vue {
         } else {
             if (file.size >= 10 * 1024 * 1024) {
                 this.acceptMessages.unshift({
-                    kind: "text",
+                    kind: DataKind.text,
                     value: "the file is too large(>= 10MB).",
                     moment: getNow(),
                     id: this.id++,
@@ -370,7 +375,7 @@ class App extends Vue {
                 return;
             }
             this.socket.emit("copy", {
-                kind: "file",
+                kind: DataKind.file,
                 value: file,
                 name: fileName,
                 type: file.type,
@@ -395,7 +400,7 @@ setInterval(() => {
 
 worker.onmessage = e => {
     const message: types.WorkMessage = e.data;
-    if (message.kind === "split file result") {
+    if (message.kind === types.MessageKind.splitFileResult) {
         blocks.push(...message.blocks);
     }
 };

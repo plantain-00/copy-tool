@@ -1,11 +1,16 @@
+export const enum DataKind {
+    text = "text",
+    file = "file",
+}
+
 export type CopyData =
     {
-        kind: "text",
+        kind: DataKind.text,
         value: string,
     }
     |
     {
-        kind: "file",
+        kind: DataKind.file,
         value: Buffer,
         name: string,
         type: string,
@@ -16,23 +21,19 @@ export type Desciprtion = {
     sdp: string,
 };
 
-declare class RTCDataChannel {
-    readyState: "open" | "close";
-    onopen: (event: any) => void;
-    onclose: (event: any) => void;
-    onmessage: (event: MessageEvent) => void;
-    send(message: any): void;
-    close(): void;
+export const enum MessageKind {
+    splitFile = "split file",
+    splitFileResult = "split file result",
 }
 
 export type WorkMessage =
     {
-        kind: "split file",
+        kind: MessageKind.splitFile,
         file: File | Blob,
         fileName: string,
     }
     |
     {
-        kind: "split file result",
+        kind: MessageKind.splitFileResult,
         blocks: Uint8Array[],
     };
