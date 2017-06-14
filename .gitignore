@@ -39,6 +39,7 @@ jspm_packages
 *.js.map
 static/*.js
 index.js
+types.js
 app.html
 static/*bundle*
 index.html
