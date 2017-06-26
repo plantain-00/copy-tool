@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as socketIO from "socket.io";
 import * as minimist from "minimist";
-import debounce = require("lodash.debounce");
+import * as debounce from "lodash.debounce";
 import * as types from "./types";
 
 const app = express();
