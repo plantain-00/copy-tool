@@ -4,6 +4,7 @@ import Component from "vue-class-component";
 import * as Clipboard from "clipboard";
 import * as types from "../types";
 import { SplitFile } from "js-split-file/browser";
+import * as format from "date-fns/format";
 import { staticAppTemplateHtml } from "./variables";
 
 declare class RTCDataChannel {
@@ -41,11 +42,7 @@ function getRoom() {
 }
 
 function getNow() {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-    return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+    return format(new Date(), "HH:mm:ss");
 }
 
 import * as QRCode from "qrcode";
