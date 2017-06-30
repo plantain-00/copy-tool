@@ -8,11 +8,13 @@
     "bundle-index-css": "cleancss static/index.css -o static/index.bundle.css",
     "clean-rev": "rimraf static/vendor.bundle-*.js static/vendor.bundle-*.css static/index.bundle-*.js static/index.bundle-*.css",
     "rev": "npm run clean-rev && rev-static --config static/rev-static.config.js",
-    "build": "npm run file2variable && tsc && npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && webpack --config static/webpack.config.js && webpack --config static/webpack.config.worker.js && npm run rev && npm run sw-precache",
-    "lint": "tslint index.ts \"static/*.ts\"",
+    "build": "npm run file2variable && tsc && npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && webpack --config static/webpack.config.js && npm run rev && npm run sw-precache",
+    "lint": "tslint index.ts \"static/*.ts\" && npm run standard",
     "file2variable": "file2variable-cli static/app.template.html -o static/variables.ts --html-minify",
     "sw-precache": "sw-precache --config static/sw-precache.config.js && npm run uglifyjs",
-    "uglifyjs": "uglifyjs static/service-worker.js -o static/service-worker.bundle.js"
+    "uglifyjs": "uglifyjs static/service-worker.js -o static/service-worker.bundle.js",
+    "standard": "standard **/*.config.js",
+    "fix": "standard --fix **/*.config.js"
   },
   "repository": {
     "type": "git",
@@ -49,6 +51,7 @@
     "rev-static": "2.4.2",
     "rimraf": "2.6.1",
     "socket.io-client": "2.0.1",
+    "standard": "10.0.2",
     "sw-precache": "5.1.1",
     "tslib": "1.7.1",
     "tslint": "5.4.0",
