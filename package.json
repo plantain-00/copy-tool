@@ -14,7 +14,8 @@
     "sw-precache": "sw-precache --config static/sw-precache.config.js && npm run uglifyjs",
     "uglifyjs": "uglifyjs static/service-worker.js -o static/service-worker.bundle.js",
     "standard": "standard **/*.config.js",
-    "fix": "standard --fix **/*.config.js"
+    "fix": "standard --fix **/*.config.js",
+    "test": "tsc -p spec && jasmine && tsc -p static_spec && karma start static_spec/karma.config.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
   "devDependencies": {
     "@types/clipboard": "1.5.34",
     "@types/express": "4.0.36",
+    "@types/jasmine": "2.5.53",
     "@types/minimist": "1.2.0",
     "@types/qrcode": "0.8.0",
     "@types/socket.io": "1.4.29",
@@ -46,7 +48,13 @@
     "file-uploader-component": "3.0.0",
     "file2variable-cli": "1.4.0",
     "github-fork-ribbon-css": "0.2.1",
+    "jasmine": "2.6.0",
     "js-split-file": "1.1.6",
+    "karma": "1.7.0",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-firefox-launcher": "1.0.1",
+    "karma-jasmine": "1.1.0",
+    "karma-webpack": "2.0.3",
     "qrcode": "0.8.2",
     "rev-static": "2.6.0",
     "rimraf": "2.6.1",

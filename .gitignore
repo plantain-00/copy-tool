@@ -35,14 +35,17 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
+# Source
 .vscode
-*.js.map
-static/*.js
-index.js
-types.js
-app.html
-static/*bundle*
-index.html
-static/version.json
+dist
+**/*.js
+**/*.css
 !*.config.js
-!*.config.*.js
+#!**/*-*.js
+#!**/*-*.css
+service-worker.js
+!*.index.bundle.js
+#**/*-*.png
+index.html
+*.data
