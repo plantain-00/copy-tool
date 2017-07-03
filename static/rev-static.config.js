@@ -6,7 +6,7 @@ module.exports = {
     'static/*.ejs.html'
   ],
   outputFiles: file => file.replace('.ejs', ''),
-  json: 'static/version.json',
+  json: false,
   ejsOptions: {
     rmWhitespace: true
   },
