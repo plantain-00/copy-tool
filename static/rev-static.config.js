@@ -14,5 +14,6 @@ module.exports = {
   customNewFileName: (filePath, fileString, md5String, baseName, extensionName) => baseName + '-' + md5String + extensionName,
   noOutputFiles: [
     'static/worker.bundle.js'
-  ]
+  ],
+  base: 'static'
 }
