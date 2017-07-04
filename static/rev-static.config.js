@@ -15,5 +15,6 @@ module.exports = {
   noOutputFiles: [
     'static/worker.bundle.js'
   ],
-  base: 'static'
+  base: 'static',
+  fileSize: 'static/file-size.json'
 }
