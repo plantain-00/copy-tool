@@ -4,6 +4,7 @@ module.exports = {
     'static/index.bundle-*.js',
     'static/vendor.bundle-*.css',
     'static/vendor.bundle-*.js',
+    'static/worker.bundle.js',
     'static/index.html'
   ],
   stripPrefix: 'static/',

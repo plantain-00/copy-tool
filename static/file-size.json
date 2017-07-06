@@ -2,6 +2,5 @@
   "indexBundleCss": "381 B",
   "vendorBundleCss": "124 kB",
   "indexBundleJs": "8.55 kB",
-  "vendorBundleJs": "236 kB",
-  "workerBundleJs": "4.75 kB"
+  "vendorBundleJs": "236 kB"
 }
