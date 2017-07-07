@@ -6,6 +6,7 @@ import * as types from "../types";
 import { SplitFile } from "js-split-file/browser";
 import * as format from "date-fns/format";
 import { appTemplateHtml } from "./variables";
+import { Locale } from "file-uploader-component/dist/vue";
 
 declare class RTCDataChannel {
     readyState: "open" | "close";
@@ -36,6 +37,9 @@ declare class RTCSessionDescription {
 }
 
 const supportWebRTC = !!(window as any).RTCPeerConnection;
+
+let locale: Locale | null = null;
+let app: App;
 
 function getRoom() {
     return Math.round(Math.random() * 35 * Math.pow(36, 9)).toString(36);
@@ -138,7 +142,6 @@ class App extends Vue {
     acceptMessages: (TextData | FileData)[] = [];
     newText = "";
     id: number = 1;
-    locale = navigator.language;
     socket: SocketIOClient.Socket;
     clientCount = 0;
     peerConnection = supportWebRTC ? new RTCPeerConnection() : null;
@@ -147,6 +150,7 @@ class App extends Vue {
     splitFile = new SplitFile();
     files: Block[] = [];
     speed = 100;
+    locale = locale;
     constructor(options?: Vue.ComponentOptions<Vue>) {
         super();
         const hash = document.location.hash;
@@ -381,9 +385,10 @@ class App extends Vue {
     }
 }
 
-const app = new App({
-    el: "#body",
-});
+function start() {
+    // tslint:disable-next-line:no-unused-expression
+    app = new App({ el: "#body" });
+}
 
 const blocks: Uint8Array[] = [];
 
@@ -407,4 +412,15 @@ if (navigator.serviceWorker) {
         // tslint:disable-next-line:no-console
         console.log("registration failed with error: " + error);
     });
+}
+
+if (navigator.language === "zh-CN") {
+    import ("file-uploader-component/dist/locales/" + navigator.language + ".js").then(module => {
+        locale = module.locale;
+        start();
+    }, error => {
+        start();
+    });
+} else {
+    start();
 }

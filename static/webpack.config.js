@@ -7,7 +7,8 @@ module.exports = [
       vendor: './static/vendor'
     },
     output: {
-      filename: 'static/[name].bundle.js'
+      path: __dirname,
+      filename: '[name].bundle-[hash].js'
     },
     plugins: [
       new webpack.DefinePlugin({
