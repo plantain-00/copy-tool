@@ -56,7 +56,7 @@
     "karma-jasmine": "1.1.0",
     "karma-webpack": "2.0.3",
     "qrcode": "0.8.2",
-    "rev-static": "3.0.3",
+    "rev-static": "3.2.1",
     "rimraf": "2.6.1",
     "socket.io-client": "2.0.3",
     "standard": "10.0.2",

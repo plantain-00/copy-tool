@@ -414,13 +414,9 @@ if (navigator.serviceWorker) {
     });
 }
 
+import { locale as zhCNLocale } from "file-uploader-component/dist/locales/zh-CN.js";
+
 if (navigator.language === "zh-CN") {
-    import ("file-uploader-component/dist/locales/" + navigator.language + ".js").then(module => {
-        locale = module.locale;
-        start();
-    }, error => {
-        start();
-    });
-} else {
-    start();
+    locale = zhCNLocale;
 }
+start();

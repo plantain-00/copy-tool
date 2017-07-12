@@ -9,7 +9,7 @@
     <title>Copy Tool</title>
     <link rel="manifest" href="/manifest.webmanifest">
     <link href="./<%=vendorBundleCss %>" rel="stylesheet" crossOrigin="anonymous" integrity="<%=sri.vendorBundleCss %>">
-    <link href="./<%=indexBundleCss %>" rel="stylesheet" crossOrigin="anonymous" integrity="<%=sri.indexBundleCss %>">
+    <%-inline.indexBundleCss %>
 </head>
 
 <body>
@@ -20,8 +20,8 @@
             <canvas id="qr"></canvas>
         </div>
     </div>
-    <script defer="defer" src="./<%=vendorBundleJs %>" crossOrigin="anonymous" integrity="<%=sri.vendorBundleJs %>"></script>
-    <script defer="defer" src="./<%=indexBundleJs %>" crossOrigin="anonymous" integrity="<%=sri.indexBundleJs %>"></script>
+    <script src="./<%=vendorBundleJs %>" crossOrigin="anonymous" integrity="<%=sri.vendorBundleJs %>"></script>
+    <%-inline.indexBundleJs %>
 </body>
 
 </html>
