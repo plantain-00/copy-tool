@@ -15,7 +15,8 @@
     "uglifyjs": "uglifyjs static/service-worker.js -o static/service-worker.bundle.js",
     "standard": "standard **/*.config.js",
     "fix": "standard --fix **/*.config.js",
-    "test": "tsc -p spec && jasmine && tsc -p static_spec && karma start static_spec/karma.config.js"
+    "test": "tsc -p spec && jasmine && tsc -p static_spec && karma start static_spec/karma.config.js",
+    "release": "clean-release"
   },
   "repository": {
     "type": "git",
@@ -43,6 +44,7 @@
     "@types/socket.io-client": "1.4.29",
     "bootstrap": "3.3.7",
     "clean-css-cli": "4.1.6",
+    "clean-release": "1.1.1",
     "clipboard": "1.7.1",
     "date-fns": "2.0.0-alpha.1",
     "file-uploader-component": "4.0.0",

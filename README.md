@@ -13,6 +13,6 @@ A tool to copy text or file from one place, and get it from another place
 
 #### deploy
 
-+ git clone the `release` branch of this repository
++ `git clone https://github.com/plantain-00/copy-tool-release.git . --depth=1 && npm i --production`
 + run `node index.js` to start, open `http://localhost:8000`
 + (optional) run `node index.js -h 0.0.0.0 -p 9000` to let the server listen to `http://0.0.0.0:9000`
