@@ -4,19 +4,11 @@
   "description": "A tool to copy text or file from one place, and get it from another place",
   "main": "index.js",
   "scripts": {
-    "bundle-vendor-css": "cleancss ./node_modules/bootstrap/dist/css/bootstrap.min.css ./node_modules/github-fork-ribbon-css/gh-fork-ribbon.css ./node_modules/file-uploader-component/dist/file-uploader.min.css -o static/vendor.bundle.css",
-    "bundle-index-css": "cleancss static/index.css -o static/index.bundle.css",
-    "clean-rev": "rimraf static/*.bundle-*.js static/*.bundle-*.css",
-    "rev": "rev-static --config static/rev-static.config.js",
-    "build": "npm run clean-rev && npm run file2variable && tsc && npm run bundle-vendor-css && npm run bundle-index-css && tsc -p static && webpack --config static/webpack.config.js && npm run rev && npm run sw-precache",
-    "lint": "tslint index.ts \"static/*.ts\" && npm run standard",
-    "file2variable": "file2variable-cli static/app.template.html -o static/variables.ts --html-minify --base static",
-    "sw-precache": "sw-precache --config static/sw-precache.config.js && npm run uglifyjs",
-    "uglifyjs": "uglifyjs static/service-worker.js -o static/service-worker.bundle.js",
-    "standard": "standard **/*.config.js",
-    "fix": "standard --fix **/*.config.js",
-    "test": "tsc -p spec && jasmine && tsc -p static_spec && karma start static_spec/karma.config.js",
-    "release": "clean-release"
+    "build": "clean-scripts build",
+    "lint": "clean-scripts lint",
+    "fix": "clean-scripts fix",
+    "test": "clean-scripts test",
+    "release": "clean-scripts release"
   },
   "repository": {
     "type": "git",
@@ -45,6 +37,7 @@
     "bootstrap": "3.3.7",
     "clean-css-cli": "4.1.6",
     "clean-release": "1.1.1",
+    "clean-scripts": "1.0.0",
     "clipboard": "1.7.1",
     "date-fns": "2.0.0-alpha.1",
     "file-uploader-component": "4.0.0",
