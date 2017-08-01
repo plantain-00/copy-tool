@@ -6,7 +6,7 @@ module.exports = {
     `cleancss ./node_modules/bootstrap/dist/css/bootstrap.min.css ./node_modules/github-fork-ribbon-css/gh-fork-ribbon.css ./node_modules/file-uploader-component/file-uploader.min.css -o static/vendor.bundle.css`,
     `cleancss static/index.css -o static/index.bundle.css`,
     `tsc -p static`,
-    `webpack --config static/webpack.config.js`,
+    `webpack --display-modules --config static/webpack.config.js`,
     `rev-static --config static/rev-static.config.js`,
     `sw-precache --config static/sw-precache.config.js`,
     `uglifyjs static/service-worker.js -o static/service-worker.bundle.js`
