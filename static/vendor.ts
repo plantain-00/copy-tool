@@ -4,7 +4,7 @@ import { __extends, __decorate } from "tslib";
 import "socket.io-client";
 import "qrcode";
 import "clipboard";
-import "file-uploader-component/dist/vue";
+import "file-uploader-component/vue";
 import "webrtc-adapter/out/adapter_no_edge_no_global";
 import "vue";
 import "vue-class-component";

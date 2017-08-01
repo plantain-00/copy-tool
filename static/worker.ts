@@ -1,5 +1,5 @@
 import * as types from "../types";
-import {SplitFile} from "js-split-file/browser";
+import SplitFile from "js-split-file/browser";
 
 const splitFile = new SplitFile();
 

@@ -3,10 +3,10 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import * as Clipboard from "clipboard";
 import * as types from "../types";
-import { SplitFile } from "js-split-file/browser";
+import SplitFile from "js-split-file/browser";
 import * as format from "date-fns/format";
 import { appTemplateHtml } from "./variables";
-import { Locale } from "file-uploader-component/dist/vue";
+import { Locale } from "file-uploader-component/vue";
 
 declare class RTCDataChannel {
     readyState: "open" | "close";
@@ -414,7 +414,7 @@ if (navigator.serviceWorker) {
     });
 }
 
-import { locale as zhCNLocale } from "file-uploader-component/dist/locales/zh-CN.js";
+import { locale as zhCNLocale } from "file-uploader-component/locales/zh-CN.js";
 
 if (navigator.language === "zh-CN") {
     locale = zhCNLocale;
