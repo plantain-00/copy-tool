@@ -33,6 +33,9 @@ module.exports = {
       'karma start static_spec/karma.config.js'
     ]
   },
-  fix: `standard --fix "**/*.config.js"`,
+  fix: {
+    ts: `tslint --fix index.ts "static/*.ts"`,
+    js: `standard --fix "**/*.config.js"`
+  },
   release: `clean-release`
 }
