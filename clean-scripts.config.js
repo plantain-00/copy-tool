@@ -21,7 +21,8 @@ module.exports = {
   },
   lint: {
     ts: `tslint index.ts "static/*.ts"`,
-    js: `standard "**/*.config.js"`
+    js: `standard "**/*.config.js"`,
+    export: `no-unused-export index.ts "static/*.ts"`
   },
   test: {
     jasmine: [
@@ -37,5 +38,6 @@ module.exports = {
     ts: `tslint --fix index.ts "static/*.ts"`,
     js: `standard --fix "**/*.config.js"`
   },
-  release: `clean-release`
+  release: `clean-release`,
+  watch: `watch-then-execute index.ts "static/*.ts" "static/*.css" "static/*.template.html" --exclude "static/variables.ts" --script "npm run build"`
 }
