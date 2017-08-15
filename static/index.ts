@@ -8,35 +8,7 @@ import * as format from "date-fns/format";
 import { appTemplateHtml } from "./variables";
 import { Locale } from "file-uploader-component/vue";
 
-declare class RTCDataChannel {
-    readyState: "open" | "close";
-    onopen: (event: any) => void;
-    onclose: (event: any) => void;
-    onmessage: (event: MessageEvent) => void;
-    send(message: any): void;
-    close(): void;
-}
-
-declare class RTCPeerConnection {
-    localDescription: RTCSessionDescription;
-    ondatachannel: (event: { channel: RTCDataChannel }) => void;
-    onicecandidate: (event: { candidate: RTCIceCandidate }) => void;
-    createDataChannel(channel: string): RTCDataChannel;
-    addIceCandidate(candidate: RTCIceCandidate): Promise<void>;
-    createOffer(): Promise<RTCSessionDescription>;
-    setLocalDescription(offer: RTCSessionDescription): Promise<void>;
-    setRemoteDescription(offer: RTCSessionDescription): Promise<void>;
-    createAnswer(): Promise<RTCSessionDescription>;
-    close(): void;
-}
-declare class RTCSessionDescription {
-    type: "offer" | "answer";
-    sdp: string;
-    constructor(description: { type: "offer" | "answer", sdp: string; });
-    toJSON(): { type: "offer" | "answer"; sdp: string };
-}
-
-const supportWebRTC = !!(window as any).RTCPeerConnection;
+const supportWebRTC = !!window.RTCPeerConnection;
 
 let locale: Locale | null = null;
 let app: App;
@@ -141,16 +113,19 @@ const worker = new Worker("worker.bundle.js");
 class App extends Vue {
     acceptMessages: (TextData | FileData)[] = [];
     newText = "";
-    id: number = 1;
-    socket: SocketIOClient.Socket;
-    clientCount = 0;
-    peerConnection = supportWebRTC ? new RTCPeerConnection() : null;
-    dataChannelIsOpen = false;
-    dataChannel: RTCDataChannel | null = null;
-    splitFile = new SplitFile();
+    id = 1;
     files: Block[] = [];
     speed = 100;
     locale = locale;
+
+    dataChannel: RTCDataChannel | null = null;
+
+    private socket: SocketIOClient.Socket;
+    private clientCount = 0;
+    private peerConnection = supportWebRTC ? new RTCPeerConnection({}) : null;
+    private dataChannelIsOpen = false;
+    private splitFile = new SplitFile();
+
     constructor(options?: Vue.ComponentOptions<Vue>) {
         super();
         const hash = document.location.hash;
@@ -256,65 +231,14 @@ class App extends Vue {
     get canCreateOffer() {
         return supportWebRTC && !this.dataChannelIsOpen;
     }
-    onGetAnswer(data: { sid: string, answer: types.Desciprtion }) {
-        const answer = new RTCSessionDescription(data.answer);
-        this.peerConnection!.setRemoteDescription(answer);
-    }
-    onGetOffer(data: { sid: string, offer: types.Desciprtion }) {
-        const offer = new RTCSessionDescription(data.offer);
-        this.peerConnection!.setRemoteDescription(offer)
-            .then(() => this.peerConnection!.createAnswer())
-            .then(answer => this.peerConnection!.setLocalDescription(answer))
-            .then(() => {
-                this.socket.emit("answer", {
-                    sid: data.sid,
-                    answer: this.peerConnection!.localDescription.toJSON(),
-                });
-            });
-    }
     tryToConnect() {
         if (this.peerConnection) {
             this.peerConnection.createOffer()
                 .then(offer => this.peerConnection!.setLocalDescription(offer))
                 .then(() => {
-                    this.socket.emit("offer", this.peerConnection!.localDescription.toJSON());
+                    this.socket.emit("offer", this.peerConnection!.localDescription!.toJSON());
                 });
         }
-    }
-    onMessageRecieved(data: TextData | ArrayBufferData) {
-        if (data.kind === DataKind.file) {
-            const file = new File([data.value], data.name, { type: data.type });
-            this.acceptMessages.unshift({
-                kind: DataKind.file,
-                value: file,
-                url: URL.createObjectURL(file),
-                moment: getNow(),
-                id: this.id++,
-            });
-            notify("You got a file!");
-        } else {
-            data.moment = getNow();
-            data.id = this.id++;
-            this.acceptMessages.unshift(data);
-            notify("You got a text message!");
-        }
-    }
-    onMessageSent(data: { kind: DataKind }) {
-        this.acceptMessages.unshift({
-            kind: DataKind.text,
-            value: `the ${data.kind} is sent successfully to ${this.clientCount} clients.`,
-            moment: getNow(),
-            id: this.id++,
-        });
-    }
-    onClientCount(data: { clientCount: number }) {
-        this.clientCount = data.clientCount;
-    }
-    get buttonText() {
-        if (this.clientCount > 0) {
-            return `Copy the text to ${this.clientCount} clients`;
-        }
-        return "No clients to sent";
     }
     copyText() {
         if (this.clientCount <= 0) {
@@ -382,6 +306,57 @@ class App extends Vue {
                 type: file.type,
             });
         }
+    }
+    private onGetAnswer(data: { sid: string, answer: types.Desciprtion }) {
+        const answer = new RTCSessionDescription(data.answer);
+        this.peerConnection!.setRemoteDescription(answer);
+    }
+    private onGetOffer(data: { sid: string, offer: types.Desciprtion }) {
+        const offer = new RTCSessionDescription(data.offer);
+        this.peerConnection!.setRemoteDescription(offer)
+            .then(() => this.peerConnection!.createAnswer())
+            .then(answer => this.peerConnection!.setLocalDescription(answer))
+            .then(() => {
+                this.socket.emit("answer", {
+                    sid: data.sid,
+                    answer: this.peerConnection!.localDescription!.toJSON(),
+                });
+            });
+    }
+    private onMessageRecieved(data: TextData | ArrayBufferData) {
+        if (data.kind === DataKind.file) {
+            const file = new File([data.value], data.name, { type: data.type });
+            this.acceptMessages.unshift({
+                kind: DataKind.file,
+                value: file,
+                url: URL.createObjectURL(file),
+                moment: getNow(),
+                id: this.id++,
+            });
+            notify("You got a file!");
+        } else {
+            data.moment = getNow();
+            data.id = this.id++;
+            this.acceptMessages.unshift(data);
+            notify("You got a text message!");
+        }
+    }
+    private onMessageSent(data: { kind: DataKind }) {
+        this.acceptMessages.unshift({
+            kind: DataKind.text,
+            value: `the ${data.kind} is sent successfully to ${this.clientCount} clients.`,
+            moment: getNow(),
+            id: this.id++,
+        });
+    }
+    private onClientCount(data: { clientCount: number }) {
+        this.clientCount = data.clientCount;
+    }
+    get buttonText() {
+        if (this.clientCount > 0) {
+            return `Copy the text to ${this.clientCount} clients`;
+        }
+        return "No clients to sent";
     }
 }
 
