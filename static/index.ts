@@ -23,16 +23,19 @@ function getNow() {
 
 import * as QRCode from "qrcode";
 
+function printInConsole(message: any) {
+    // tslint:disable-next-line:no-console
+    console.log(message);
+}
+
 function drawQRCode() {
     QRCode.toCanvas(document.getElementById("qr"), document.location.href, (error: Error) => {
         if (error) {
-            // tslint:disable-next-line:no-console
-            console.log(error);
+            printInConsole(error);
         }
     });
 }
 
-// tslint:disable-next-line:no-unused-expression
 new Clipboard(".clipboard");
 
 const enum DataKind {
@@ -82,12 +85,10 @@ function notify(title: string) {
         return;
     }
     if (Notification.permission === "granted") {
-        // tslint:disable-next-line:no-unused-expression
         new Notification(title);
     } else if (Notification.permission !== "denied") {
         Notification.requestPermission(permission => {
             if (permission === "granted") {
-                // tslint:disable-next-line:no-unused-expression
                 new Notification(title);
             }
         });
@@ -361,7 +362,6 @@ class App extends Vue {
 }
 
 function start() {
-    // tslint:disable-next-line:no-unused-expression
     app = new App({ el: "#body" });
 }
 
@@ -384,8 +384,7 @@ worker.onmessage = e => {
 
 if (navigator.serviceWorker) {
     navigator.serviceWorker.register("service-worker.bundle.js").catch(error => {
-        // tslint:disable-next-line:no-console
-        console.log("registration failed with error: " + error);
+        printInConsole("registration failed with error: " + error);
     });
 }
 

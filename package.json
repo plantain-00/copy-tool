@@ -51,7 +51,7 @@
     "karma-firefox-launcher": "1.0.1",
     "karma-jasmine": "1.1.0",
     "karma-webpack": "2.0.4",
-    "no-unused-export": "1.0.1",
+    "no-unused-export": "1.1.0",
     "qrcode": "0.9.0",
     "rev-static": "3.2.2",
     "rimraf": "2.6.1",
