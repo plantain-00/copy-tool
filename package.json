@@ -38,7 +38,7 @@
     "bootstrap": "3.3.7",
     "clean-css-cli": "4.1.6",
     "clean-release": "1.3.2",
-    "clean-scripts": "1.2.1",
+    "clean-scripts": "1.2.3",
     "clipboard": "1.7.1",
     "date-fns": "2.0.0-alpha.1",
     "file-uploader-component": "5.0.0",
