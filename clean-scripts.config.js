@@ -17,8 +17,10 @@ module.exports = {
         clean: `rimraf static/*.bundle-*.js static/*.bundle-*.css`
       },
       `rev-static --config static/rev-static.config.js`,
-      `sw-precache --config static/sw-precache.config.js`,
-      `uglifyjs static/service-worker.js -o static/service-worker.bundle.js`
+      [
+        `sw-precache --config static/sw-precache.config.js`,
+        `uglifyjs static/service-worker.js -o static/service-worker.bundle.js`
+      ]
     ]
   },
   lint: {
@@ -54,5 +56,13 @@ module.exports = {
     js: `standard --fix "**/*.config.js"`
   },
   release: `clean-release`,
-  watch: `watch-then-execute index.ts "static/*.ts" "static/*.css" "static/*.template.html" --exclude "static/variables.ts" --script "npm run build"`
+  watch: {
+    back: `tsc --watch`,
+    template: `file2variable-cli static/app.template.html -o static/variables.ts --html-minify --base static --watch`,
+    front: `tsc -p static --watch`,
+    webpack: `webpack --config static/webpack.config.js --watch`,
+    css: `watch-then-execute "static/index.css" --script "clean-scripts build.front[0].css[1]"`,
+    rev: `rev-static --config static/rev-static.config.js --watch`,
+    sw: `watch-then-execute "static/vendor.bundle-*.js" "static/vendor.bundle-*.css" "static/index.html" "static/worker.bundle.js" --script "clean-scripts build.front[2]"`
+  }
 }

@@ -14,5 +14,9 @@
         "jsx": "react",
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true
-    }
+    },
+    "exclude": [
+        "static/",
+        "node_modules/"
+    ]
 }
