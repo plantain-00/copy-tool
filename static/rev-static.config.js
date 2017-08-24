@@ -1,3 +1,5 @@
+const fs = require('fs')
+
 module.exports = {
   inputFiles: [
     'static/*.bundle.css',
@@ -22,5 +24,8 @@ module.exports = {
   sha: 256,
   customNewFileName: (filePath, fileString, md5String, baseName, extensionName) => baseName + '-' + md5String + extensionName,
   base: 'static',
-  fileSize: 'static/file-size.json'
+  fileSize: 'static/file-size.json',
+  context: {
+    prerender: fs.readFileSync('static/prerender.html')
+  }
 }

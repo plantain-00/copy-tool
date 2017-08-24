@@ -9,7 +9,8 @@
     "fix": "clean-scripts fix",
     "test": "clean-scripts test",
     "release": "clean-scripts release",
-    "watch": "clean-scripts watch"
+    "watch": "clean-scripts watch",
+    "prerender": "clean-scripts prerender"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "file-uploader-component": "5.0.0",
     "file2variable-cli": "1.5.2",
     "github-fork-ribbon-css": "0.2.1",
+    "http-server": "0.10.0",
     "jasmine": "2.7.0",
     "js-split-file": "2.0.0",
     "karma": "1.7.0",
@@ -52,8 +54,9 @@
     "karma-jasmine": "1.1.0",
     "karma-webpack": "2.0.4",
     "no-unused-export": "1.1.0",
+    "prerender-js": "1.1.0",
     "qrcode": "0.9.0",
-    "rev-static": "3.3.1",
+    "rev-static": "3.4.0",
     "rimraf": "2.6.1",
     "socket.io-client": "2.0.3",
     "standard": "10.0.2",

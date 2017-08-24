@@ -64,5 +64,17 @@ module.exports = {
     css: `watch-then-execute "static/index.css" --script "clean-scripts build.front[0].css[1]"`,
     rev: `rev-static --config static/rev-static.config.js --watch`,
     sw: `watch-then-execute "static/vendor.bundle-*.js" "static/vendor.bundle-*.css" "static/index.html" "static/worker.bundle.js" --script "clean-scripts build.front[2]"`
-  }
+  },
+  prerender: [
+    async () => {
+      const { createServer } = require('http-server')
+      const { prerender } = require('prerender-js')
+      const server = createServer()
+      server.listen(8000)
+      await prerender('http://localhost:8000/static', '#prerender-container', 'static/prerender.html')
+      server.close()
+    },
+    `clean-scripts build.front[1]`,
+    `clean-scripts build.front[2]`
+  ]
 }
