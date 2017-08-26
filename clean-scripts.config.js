@@ -23,7 +23,7 @@ module.exports = {
       ],
       async () => {
         const puppeteer = require('puppeteer')
-        const server = childProcess.exec('node index.js')
+        const server = childProcess.spawn('node', ['index.js'])
         server.stdout.pipe(process.stdout)
         server.stderr.pipe(process.stderr)
         const browser = await puppeteer.launch()
@@ -32,7 +32,7 @@ module.exports = {
         await page.goto(`http://localhost:8000/#test`)
         await page.waitFor(1000)
         await page.screenshot({ path: `static/screenshot.png`, fullPage: true })
-        server.kill()
+        server.kill('SIGINT')
         browser.close()
       }
     ]
