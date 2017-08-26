@@ -86,7 +86,7 @@ module.exports = {
     async () => {
       const puppeteer = require('puppeteer')
       const fs = require('fs')
-      const server = childProcess.exec('node index.js')
+      const server = childProcess.spawn('node', ['index.js'])
       server.stdout.pipe(process.stdout)
       server.stderr.pipe(process.stderr)
       const browser = await puppeteer.launch()
@@ -99,7 +99,7 @@ module.exports = {
         return element ? element.innerHTML : ''
       })
       fs.writeFileSync('static/prerender.html', content)
-      server.kill()
+      server.kill('SIGINT')
       browser.close()
     },
     `clean-scripts build.front[1]`,
