@@ -54,7 +54,7 @@ module.exports = {
     ],
     karma: [
       'tsc -p static_spec',
-      process.env.APPVEYOR ? 'echo "skip karma test"' : 'karma start static_spec/karma.config.js'
+      'karma start static_spec/karma.config.js'
     ],
     consistency: [
       'git checkout static/screenshot.png',
