@@ -83,10 +83,10 @@
             <canvas id="qr" height="148" width="148" style="height: 148px; width: 148px;"></canvas>
         </div>
     </div>
-    <script src="./vendor.bundle-c1059f38eb10244f0191b60a4fde32e0.js" crossorigin="anonymous" integrity="sha256-oLDEEtnrwWijuMg6o16G+yVzw4fYA9GJHN37N4RicC8="></script>
+    <script src="./vendor.bundle-0e562996165b3ef4cd6c4cf151336d0f.js" crossorigin="anonymous" integrity="sha256-ERph0a55nv6Ov4xNfBmdo+QSaqRfS0juUo5BB0i9oDs="></script>
     <script>
         webpackJsonp([0], {
-            113: function(e, n, t) {
+            106: function(e, n, t) {
                 "use strict";
                 t.d(n, "a", function() {
                     return i
@@ -97,7 +97,7 @@
                     pasteFromClipboard: "、或者从剪切板粘贴来上传文件。"
                 }
             },
-            41: function(e, n, t) {
+            42: function(e, n, t) {
                 "use strict";
 
                 function i() {
@@ -142,12 +142,12 @@
                     v = t(16),
                     m = t.n(v),
                     h = t(31),
-                    b = (t.n(h), t(72)),
+                    b = (t.n(h), t(73)),
                     g = (t.n(b), t(32)),
                     k = t(33),
-                    y = (t.n(k), t(94)),
-                    C = t(35),
-                    w = (t.n(C), t(113)),
+                    y = (t.n(k), t(87)),
+                    C = t(36),
+                    w = (t.n(C), t(106)),
                     x = !!window.RTCPeerConnection,
                     M = null;
                 new h(".clipboard");
@@ -357,17 +357,17 @@
                         })
                     }()
             },
-            72: function(e, n, t) {
+            73: function(e, n, t) {
                 "use strict"
             },
-            94: function(e, n, t) {
+            87: function(e, n, t) {
                 "use strict";
                 t.d(n, "a", function() {
                     return i
                 });
                 var i = '<div><div class="row"><div class="col-md-12"><h4>Copy-Tool</h4></div></div><div class="row"><div class="col-md-12"><textarea class="form-control" rows="5" v-model="newText"></textarea></div></div><div class="row"><div class="col-md-12"><button class="btn btn-primary copy-button" @click="copyText()">{{buttonText}}</button></div></div><div class="row" v-if="canCreateOffer"><div class="col-md-12"><button class="btn btn-default copy-button" @click="tryToConnect()">try to connect</button></div></div><div class="row" v-for="(file, index) in files"><div class="col-md-12"><div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" :aria-valuenow="file.progress" aria-valuemin="0" aria-valuemax="100" :style="\'width:\' + file.progress + \'%\'">{{file.fileName}}</div></div></div></div><div class="row"><div class="col-md-12"><label class="radio-inline"><input type="radio" v-model="speed" value="10"> 100KB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="20"> 200KB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="50"> 500KB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="100"> 1MB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="200"> 2MB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="500"> 5MB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="1000"> 10MB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="Infinity"> No limit(Will block the UI)</label></div></div><div class="row"><div class="col-md-12"><file-uploader @file-got="fileGot($event)" multiple="true" :locale="locale"></file-uploader></div></div><div class="row"><div class="col-md-12"><ul><li v-for="(message, index) in acceptMessages"><span class="label label-default">{{message.moment}}</span><span class="label label-info">{{message.kind}}</span><button v-if="message.kind === \'text\'" class="btn btn-xs btn-default clipboard" :data-clipboard-target="\'#clipboard_\' + message.id">copy</button><pre v-if="message.kind === \'text\'" :id="\'clipboard_\' + message.id">{{message.value}}</pre><a v-if="message.kind === \'file\'" class="btn btn-link" :href="message.url" :download="message.value.name">{{message.value.name}}</a></li></ul></div></div></div>'
             }
-        }, [41]);
+        }, [42]);
     </script>
 </body>
 
