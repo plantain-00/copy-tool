@@ -71,6 +71,7 @@ module.exports = {
     ],
     consistency: [
       'git checkout static/screenshot.png',
+      'git checkout static/screenshot-2.png',
       async () => {
         const { stdout } = await execAsync('git status -s')
         if (stdout) {
