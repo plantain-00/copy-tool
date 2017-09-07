@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Copy Tool</title>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link href="./vendor.bundle-fe594b8060861ae37850017fe1932dff.css" rel="stylesheet" crossorigin="anonymous" integrity="sha256-O557uZo699ZdJ3jMuxFa9WMircT44ntD4ehBcE2r5bs=">
+    <style>
+        * {
+            font-family: "Lucida Grande", Lucida Sans Unicode, Hiragino Sans GB, WenQuanYi Micro Hei, Verdana, Aril, sans-serif;
+            -webkit-font-smoothing: antialiased
+        }
+
+        input,
+        textarea {
+            font-family: Menlo, Monaco, Consolas, "Courier New", monospace
+        }
+
+        pre {
+            white-space: pre-wrap;
+            white-space: -moz-pre-wrap;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word
+        }
+
+        .copy-button {
+            width: 100%
+        }
+
+        .row {
+            margin-top: 5px
+        }
+    </style>
+</head>
+
+<body>
+    <a class="github-fork-ribbon right-bottom" href="https://github.com/plantain-00/copy-tool" title="Fork me on GitHub" target="_blank" rel="noopener">Fork me on GitHub</a>
+    <div class="container">
+        <div id="prerender-container">
+            <div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Copy-Tool</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12"><textarea rows="5" class="form-control"></textarea></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12"><button class="btn btn-primary copy-button">Copy the text to 1 clients</button></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12"><button class="btn btn-default copy-button">try to connect</button></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12"><label class="radio-inline"><input type="radio" value="10"> 100KB/s</label><label class="radio-inline"><input type="radio" value="20"> 200KB/s</label><label class="radio-inline"><input type="radio" value="50"> 500KB/s</label>
+                        <label
+                            class="radio-inline"><input type="radio" value="100"> 1MB/s</label><label class="radio-inline"><input type="radio" value="200"> 2MB/s</label><label class="radio-inline"><input type="radio" value="500"> 5MB/s</label><label class="radio-inline"><input type="radio" value="1000"> 10MB/s</label>
+                            <label
+                                class="radio-inline"><input type="radio" value="Infinity"> No limit(Will block the UI)</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div>
+                            <p class="file-uploader-container">Upload files by dragging &amp; dropping,<span>selecting them</span>, or pasting from the clipboard. <input type="file" multiple="multiple"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <ul></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <canvas id="qr" height="148" width="148" style="height: 148px; width: 148px;"></canvas>
+        </div>
+    </div>
+    <script src="./vendor.bundle-0e562996165b3ef4cd6c4cf151336d0f.js" crossorigin="anonymous" integrity="sha256-ERph0a55nv6Ov4xNfBmdo+QSaqRfS0juUo5BB0i9oDs="></script>
+    <script>
+        webpackJsonp([0], {
+            106: function(e, n, t) {
+                "use strict";
+                t.d(n, "a", function() {
+                    return i
+                });
+                var i = {
+                    dragAndDrop: "通过拖放、",
+                    selectFile: "选择",
+                    pasteFromClipboard: "、或者从剪切板粘贴来上传文件。"
+                }
+            },
+            42: function(e, n, t) {
+                "use strict";
+
+                function i() {
+                    return Math.round(35 * Math.random() * Math.pow(36, 9)).toString(36)
+                }
+
+                function o() {
+                    return k(new Date, "HH:mm:ss")
+                }
+
+                function s(e) {
+                    console.log(e)
+                }
+
+                function a() {
+                    C.toCanvas(document.getElementById("qr"), document.location.href, function(e) {
+                        e && s(e)
+                    })
+                }
+
+                function l(e) {
+                    "Notification" in window && ("granted" === Notification.permission ? new Notification(e) : "denied" !== Notification.permission && Notification.requestPermission(function(n) {
+                        "granted" === n && new Notification(e)
+                    }))
+                }
+
+                function c(e) {
+                    for (var n = document.cookie.split(";"), t = 0, i = n; t < i.length; t++) {
+                        var o = i[t],
+                            s = o.trim().split("=");
+                        if (s[0] === e) return s[1]
+                    }
+                    return ""
+                }
+                Object.defineProperty(n, "__esModule", {
+                    value: !0
+                });
+                var r, d = t(9),
+                    u = t(19),
+                    p = (t.n(u), t(12)),
+                    f = t.n(p),
+                    v = t(16),
+                    m = t.n(v),
+                    h = t(31),
+                    b = (t.n(h), t(73)),
+                    g = (t.n(b), t(32)),
+                    k = t(33),
+                    y = (t.n(k), t(87)),
+                    C = t(36),
+                    w = (t.n(C), t(106)),
+                    x = !!window.RTCPeerConnection,
+                    M = null;
+                new h(".clipboard");
+                var N = new Worker("worker.bundle.js"),
+                    O = function(e) {
+                        function n(n) {
+                            var t = e.call(this) || this;
+                            t.acceptMessages = [], t.newText = "", t.id = 1, t.files = [], t.speed = 100, t.locale = M, t.dataChannel = null, t.clientCount = 0, t.peerConnection = x ? new RTCPeerConnection({}) : null, t.dataChannelIsOpen = !1, t.splitFile = new g.a;
+                            var s, d = document.location.hash;
+                            d && "#" !== d ? s = d.substr(1) : (s = c("room") || i(), document.location.hash = "#" + s);
+                            var p = function() {
+                                t.socket = u("/", {
+                                    query: {
+                                        room: s
+                                    }
+                                }), t.socket.on("copy", t.onMessageRecieved), t.socket.on("message_sent", t.onMessageSent), t.socket.on("client_count", t.onClientCount), x && (t.socket.on("offer", t.onGetOffer), t.socket.on("answer", t.onGetAnswer)), document.cookie = "room=" + s, a()
+                            };
+                            return p(), window.onhashchange = function(e) {
+                                if (e.newURL) {
+                                    var n = e.newURL.indexOf("#");
+                                    if (n > -1) {
+                                        var i = e.newURL.substring(n + 1);
+                                        s !== i && (t.socket.disconnect(), s = i, p())
+                                    }
+                                }
+                            }, t.peerConnection && (t.dataChannel = t.peerConnection.createDataChannel("copy_tool_channel_name"), t.peerConnection.ondatachannel = function(e) {
+                                e.channel.onopen = function(e) {
+                                    r.dataChannelIsOpen = !0, t.acceptMessages.unshift({
+                                        kind: "text",
+                                        value: "The connection is opened.",
+                                        moment: o(),
+                                        id: t.id++
+                                    })
+                                }, e.channel.onclose = function(e) {
+                                    r.dataChannelIsOpen = !1, t.acceptMessages.unshift({
+                                        kind: "text",
+                                        value: "The connection is closed.",
+                                        moment: o(),
+                                        id: t.id++
+                                    })
+                                }, e.channel.onmessage = function(e) {
+                                    if ("string" == typeof e.data) t.acceptMessages.unshift({
+                                        kind: "text",
+                                        value: e.data,
+                                        moment: o(),
+                                        id: t.id++
+                                    }), l("You got a text message!");
+                                    else {
+                                        var n = t.splitFile.decodeBlock(new Uint8Array(e.data)),
+                                            i = t.files.findIndex(function(e) {
+                                                return e.fileName === n.fileName
+                                            }); - 1 === i && (i = t.files.length, t.files.push({
+                                            fileName: n.fileName,
+                                            blocks: [],
+                                            progress: 0
+                                        }));
+                                        var s = t.files[i];
+                                        if (s.blocks.push({
+                                                currentBlockIndex: n.currentBlockIndex,
+                                                binary: n.binary
+                                            }), s.progress = Math.round(100 * s.blocks.length / n.totalBlockCount), s.blocks.length === n.totalBlockCount) {
+                                            s.blocks.sort(function(e, n) {
+                                                return e.currentBlockIndex - n.currentBlockIndex
+                                            });
+                                            var a = new File(s.blocks.map(function(e) {
+                                                return e.binary
+                                            }), n.fileName);
+                                            t.acceptMessages.unshift({
+                                                kind: "file",
+                                                value: a,
+                                                url: URL.createObjectURL(a),
+                                                moment: o(),
+                                                id: t.id++
+                                            }), t.files.splice(i, 1), l("You got a file!")
+                                        }
+                                    }
+                                }
+                            }), t
+                        }
+                        return d.b(n, e), Object.defineProperty(n.prototype, "canCreateOffer", {
+                            get: function() {
+                                return x && !this.dataChannelIsOpen
+                            },
+                            enumerable: !0,
+                            configurable: !0
+                        }), n.prototype.tryToConnect = function() {
+                            var e = this;
+                            this.peerConnection && this.peerConnection.createOffer().then(function(n) {
+                                return e.peerConnection.setLocalDescription(n)
+                            }).then(function() {
+                                e.socket.emit("offer", e.peerConnection.localDescription.toJSON())
+                            })
+                        }, n.prototype.copyText = function() {
+                            if (this.clientCount <= 0) return void this.acceptMessages.unshift({
+                                kind: "text",
+                                value: "No clients to sent.",
+                                moment: o(),
+                                id: this.id++
+                            });
+                            if (!this.newText) return void this.acceptMessages.unshift({
+                                kind: "text",
+                                value: "No text to sent.",
+                                moment: o(),
+                                id: this.id++
+                            });
+                            if (this.dataChannelIsOpen) this.dataChannel.send(this.newText);
+                            else {
+                                var e = {
+                                    kind: "text",
+                                    value: this.newText
+                                };
+                                this.socket.emit("copy", e)
+                            }
+                            this.newText = ""
+                        }, n.prototype.fileGot = function(e) {
+                            if (this.clientCount <= 0) return void this.acceptMessages.unshift({
+                                kind: "text",
+                                value: "No clients to sent.",
+                                moment: o(),
+                                id: this.id++
+                            });
+                            var n = e.type.split("/")[1],
+                                t = e.name || "no name." + n;
+                            if (this.dataChannelIsOpen) {
+                                var i = {
+                                    kind: "split file",
+                                    file: e,
+                                    fileName: t
+                                };
+                                N.postMessage(i)
+                            } else {
+                                if (e.size >= 10485760) return void this.acceptMessages.unshift({
+                                    kind: "text",
+                                    value: "the file is too large(>= 10MB).",
+                                    moment: o(),
+                                    id: this.id++
+                                });
+                                this.socket.emit("copy", {
+                                    kind: "file",
+                                    value: e,
+                                    name: t,
+                                    type: e.type
+                                })
+                            }
+                        }, n.prototype.onGetAnswer = function(e) {
+                            var n = new RTCSessionDescription(e.answer);
+                            this.peerConnection.setRemoteDescription(n)
+                        }, n.prototype.onGetOffer = function(e) {
+                            var n = this,
+                                t = new RTCSessionDescription(e.offer);
+                            this.peerConnection.setRemoteDescription(t).then(function() {
+                                return n.peerConnection.createAnswer()
+                            }).then(function(e) {
+                                return n.peerConnection.setLocalDescription(e)
+                            }).then(function() {
+                                n.socket.emit("answer", {
+                                    sid: e.sid,
+                                    answer: n.peerConnection.localDescription.toJSON()
+                                })
+                            })
+                        }, n.prototype.onMessageRecieved = function(e) {
+                            if ("file" === e.kind) {
+                                var n = new File([e.value], e.name, {
+                                    type: e.type
+                                });
+                                this.acceptMessages.unshift({
+                                    kind: "file",
+                                    value: n,
+                                    url: URL.createObjectURL(n),
+                                    moment: o(),
+                                    id: this.id++
+                                }), l("You got a file!")
+                            } else e.moment = o(), e.id = this.id++, this.acceptMessages.unshift(e), l("You got a text message!")
+                        }, n.prototype.onMessageSent = function(e) {
+                            this.acceptMessages.unshift({
+                                kind: "text",
+                                value: "the " + e.kind + " is sent successfully to " + this.clientCount + " clients.",
+                                moment: o(),
+                                id: this.id++
+                            })
+                        }, n.prototype.onClientCount = function(e) {
+                            this.clientCount = e.clientCount
+                        }, Object.defineProperty(n.prototype, "buttonText", {
+                            get: function() {
+                                return this.clientCount > 0 ? "Copy the text to " + this.clientCount + " clients" : "No clients to sent"
+                            },
+                            enumerable: !0,
+                            configurable: !0
+                        }), n = d.a([m()({
+                            template: y.a
+                        })], n)
+                    }(f.a),
+                    T = [];
+                setInterval(function() {
+                        T.length > 0 && T.splice(0, r.speed).forEach(function(e) {
+                            r.dataChannel.send(e)
+                        })
+                    }, 1e3), N.onmessage = function(e) {
+                        var n = e.data;
+                        "split file result" === n.kind && T.push.apply(T, n.blocks)
+                    }, navigator.serviceWorker && navigator.serviceWorker.register("service-worker.bundle.js").catch(function(e) {
+                        s("registration failed with error: " + e)
+                    }), "zh-CN" === navigator.language && (M = w.a),
+                    function() {
+                        r = new O({
+                            el: "#body"
+                        })
+                    }()
+            },
+            73: function(e, n, t) {
+                "use strict"
+            },
+            87: function(e, n, t) {
+                "use strict";
+                t.d(n, "a", function() {
+                    return i
+                });
+                var i = '<div><div class="row"><div class="col-md-12"><h4>Copy-Tool</h4></div></div><div class="row"><div class="col-md-12"><textarea class="form-control" rows="5" v-model="newText"></textarea></div></div><div class="row"><div class="col-md-12"><button class="btn btn-primary copy-button" @click="copyText()">{{buttonText}}</button></div></div><div class="row" v-if="canCreateOffer"><div class="col-md-12"><button class="btn btn-default copy-button" @click="tryToConnect()">try to connect</button></div></div><div class="row" v-for="(file, index) in files"><div class="col-md-12"><div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" :aria-valuenow="file.progress" aria-valuemin="0" aria-valuemax="100" :style="\'width:\' + file.progress + \'%\'">{{file.fileName}}</div></div></div></div><div class="row"><div class="col-md-12"><label class="radio-inline"><input type="radio" v-model="speed" value="10"> 100KB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="20"> 200KB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="50"> 500KB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="100"> 1MB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="200"> 2MB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="500"> 5MB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="1000"> 10MB/s</label><label class="radio-inline"><input type="radio" v-model="speed" value="Infinity"> No limit(Will block the UI)</label></div></div><div class="row"><div class="col-md-12"><file-uploader @file-got="fileGot($event)" multiple="true" :locale="locale"></file-uploader></div></div><div class="row"><div class="col-md-12"><ul><li v-for="(message, index) in acceptMessages"><span class="label label-default">{{message.moment}}</span><span class="label label-info">{{message.kind}}</span><button v-if="message.kind === \'text\'" class="btn btn-xs btn-default clipboard" :data-clipboard-target="\'#clipboard_\' + message.id">copy</button><pre v-if="message.kind === \'text\'" :id="\'clipboard_\' + message.id">{{message.value}}</pre><a v-if="message.kind === \'file\'" class="btn btn-link" :href="message.url" :download="message.value.name">{{message.value.name}}</a></li></ul></div></div></div>'
+            }
+        }, [42]);
+    </script>
+</body>
+
+</html>

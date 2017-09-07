@@ -40,6 +40,16 @@ module.exports = {
         await page.screenshot({ path: `static/screenshot.png`, fullPage: true })
         const content = await page.content()
         fs.writeFileSync(`static/screenshot-src.html`, beautify(content))
+
+        const page2 = await browser.newPage()
+        await page2.emulate({ viewport: { width: 1440, height: 900 }, userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36' })
+        await page2.waitFor(1000)
+        await page2.goto(`http://localhost:8000/#test`)
+        await page2.waitFor(1000)
+        await page2.screenshot({ path: `static/screenshot-2.png`, fullPage: true })
+        const content2 = await page.content()
+        fs.writeFileSync(`static/screenshot-2-src.html`, beautify(content2))
+
         server.kill('SIGINT')
         browser.close()
       }
