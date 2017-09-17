@@ -31,7 +31,7 @@
   "devDependencies": {
     "@types/clipboard": "1.5.34",
     "@types/express": "4.0.37",
-    "@types/jasmine": "2.5.54",
+    "@types/jasmine": "2.6.0",
     "@types/minimist": "1.2.0",
     "@types/qrcode": "0.8.0",
     "@types/socket.io": "1.4.30",
@@ -57,7 +57,7 @@
     "puppeteer": "0.10.2",
     "qrcode": "0.9.0",
     "rev-static": "3.4.0",
-    "rimraf": "2.6.1",
+    "rimraf": "2.6.2",
     "socket.io-client": "2.0.3",
     "standard": "10.0.3",
     "sw-precache": "5.2.0",
@@ -65,10 +65,10 @@
     "tslint": "5.7.0",
     "typescript": "2.5.2",
     "uglify-js": "2",
-    "vue": "2.4.2",
+    "vue": "2.4.4",
     "vue-class-component": "5.0.2",
     "watch-then-execute": "1.0.1",
-    "webpack": "3.5.6",
-    "webrtc-adapter": "5.0.3"
+    "webpack": "3.6.0",
+    "webrtc-adapter": "5.0.4"
   }
 }
