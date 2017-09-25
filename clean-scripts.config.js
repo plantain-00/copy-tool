@@ -15,7 +15,8 @@ module.exports = {
         ],
         css: [
           `cleancss ./node_modules/bootstrap/dist/css/bootstrap.min.css ./node_modules/github-fork-ribbon-css/gh-fork-ribbon.css ./node_modules/file-uploader-component/file-uploader.min.css -o static/vendor.bundle.css`,
-          `cleancss static/index.css -o static/index.bundle.css`
+          `postcss static/index.css -o static/index.postcss.css`,
+          `cleancss static/index.postcss.css -o static/index.bundle.css`
         ],
         clean: `rimraf static/*.bundle-*.js static/*.bundle-*.css`
       },
