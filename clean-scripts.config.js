@@ -71,8 +71,7 @@ module.exports = {
       'karma start static_spec/karma.config.js'
     ],
     consistency: [
-      'git checkout static/screenshot.png',
-      'git checkout static/screenshot-2.png',
+      'git checkout "static/screenshot*.png"',
       async () => {
         const { stdout } = await execAsync('git status -s')
         if (stdout) {
