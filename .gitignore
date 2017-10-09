@@ -48,4 +48,5 @@ service-worker.js
 !*.index.bundle.js
 #**/*-*.png
 index.html
+!prerender/index.html
 *.data

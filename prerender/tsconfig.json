@@ -2,23 +2,14 @@
     "compilerOptions": {
         "target": "esnext",
         "module": "commonjs",
-
-        "declaration": false,
-
         "strict": true,
         "noUnusedLocals": true,
         "noImplicitReturns": true,
-
         "skipLibCheck": true,
         "importHelpers": true,
         "jsx": "react",
         "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true
-    },
-    "exclude": [
-        "static/",
-        "node_modules/",
-        "screenshots",
-        "prerender"
-    ]
+        "allowSyntheticDefaultImports": true,
+        "downlevelIteration": true
+    }
 }

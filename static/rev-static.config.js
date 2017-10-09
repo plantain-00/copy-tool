@@ -26,6 +26,6 @@ module.exports = {
   base: 'static',
   fileSize: 'static/file-size.json',
   context: {
-    prerender: fs.readFileSync('static/prerender.html')
+    prerender: fs.readFileSync('prerender/index.html')
   }
 }

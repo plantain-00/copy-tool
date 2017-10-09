@@ -1,5 +1,6 @@
 const childProcess = require('child_process')
 const util = require('util')
+const { Service } = require('clean-scripts')
 
 const execAsync = util.promisify(childProcess.exec)
 
@@ -24,36 +25,7 @@ module.exports = {
       [
         `sw-precache --config static/sw-precache.config.js`,
         `uglifyjs static/service-worker.js -o static/service-worker.bundle.js`
-      ],
-      async () => {
-        const puppeteer = require('puppeteer')
-        const fs = require('fs')
-        const beautify = require('js-beautify').html
-        const server = childProcess.spawn('node', ['index.js'])
-        server.stdout.pipe(process.stdout)
-        server.stderr.pipe(process.stderr)
-        const browser = await puppeteer.launch()
-        const page = await browser.newPage()
-        await page.emulate({ viewport: { width: 1440, height: 900 }, userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36' })
-        await page.waitFor(1000)
-        await page.goto(`http://localhost:8000/#test`)
-        await page.waitFor(1000)
-        await page.screenshot({ path: `static/screenshot.png`, fullPage: true })
-        const content = await page.content()
-        fs.writeFileSync(`static/screenshot-src.html`, beautify(content))
-
-        const page2 = await browser.newPage()
-        await page2.emulate({ viewport: { width: 1440, height: 900 }, userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36' })
-        await page2.waitFor(1000)
-        await page2.goto(`http://localhost:8000/#test`)
-        await page2.waitFor(1000)
-        await page2.screenshot({ path: `static/screenshot-2.png`, fullPage: true })
-        const content2 = await page.content()
-        fs.writeFileSync(`static/screenshot-2-src.html`, beautify(content2))
-
-        server.kill('SIGINT')
-        browser.close()
-      }
+      ]
     ]
   },
   lint: {
@@ -70,16 +42,13 @@ module.exports = {
       'tsc -p static_spec',
       'karma start static_spec/karma.config.js'
     ],
-    consistency: [
-      'git checkout "static/screenshot*.png"',
-      async () => {
-        const { stdout } = await execAsync('git status -s')
-        if (stdout) {
-          console.log(stdout)
-          throw new Error(`generated files doesn't match.`)
-        }
+    consistency: async () => {
+      const { stdout } = await execAsync('git status -s')
+      if (stdout) {
+        console.log(stdout)
+        throw new Error(`generated files doesn't match.`)
       }
-    ]
+    }
   },
   fix: {
     ts: `tslint --fix index.ts "static/*.ts"`,
@@ -95,27 +64,15 @@ module.exports = {
     rev: `rev-static --config static/rev-static.config.js --watch`,
     sw: `watch-then-execute "static/vendor.bundle-*.js" "static/vendor.bundle-*.css" "static/index.html" "static/worker.bundle.js" --script "clean-scripts build.front[2]"`
   },
+  screenshot: [
+    new Service(`node index.js`),
+    `tsc -p screenshots`,
+    `node screenshots/index.js`
+  ],
   prerender: [
-    async () => {
-      const puppeteer = require('puppeteer')
-      const fs = require('fs')
-      const server = childProcess.spawn('node', ['index.js'])
-      server.stdout.pipe(process.stdout)
-      server.stderr.pipe(process.stderr)
-      const browser = await puppeteer.launch()
-      const page = await browser.newPage()
-      await page.emulate({ viewport: { width: 1440, height: 900 }, userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36' })
-      await page.waitFor(1000)
-      await page.goto('http://localhost:8000/#test')
-      await page.waitFor(1000)
-      const content = await page.evaluate(() => {
-        const element = document.querySelector('#prerender-container')
-        return element ? element.innerHTML : ''
-      })
-      fs.writeFileSync('static/prerender.html', content)
-      server.kill('SIGINT')
-      browser.close()
-    },
+    new Service(`node index.js`),
+    `tsc -p prerender`,
+    `node prerender/index.js`,
     `clean-scripts build.front[1]`,
     `clean-scripts build.front[2]`
   ]
