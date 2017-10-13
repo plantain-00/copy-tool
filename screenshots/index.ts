@@ -13,6 +13,7 @@ import * as puppeteer from "puppeteer";
     await page2.goto(`http://localhost:8000/#test`);
     await page2.waitFor(2000);
     await page2.screenshot({ path: `screenshots/second-client.png`, fullPage: true });
+    await page.screenshot({ path: `screenshots/first-client.png`, fullPage: true });
 
     browser.close();
 })();
