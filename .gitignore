@@ -50,3 +50,4 @@ service-worker.js
 index.html
 !prerender/index.html
 *.data
+file-size.json
