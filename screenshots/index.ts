@@ -15,5 +15,29 @@ import * as puppeteer from "puppeteer";
     await page2.screenshot({ path: `screenshots/second-client.png`, fullPage: true });
     await page.screenshot({ path: `screenshots/first-client.png`, fullPage: true });
 
+    await (page.type as any)("textarea", "hello world!");
+    await page.click(".btn-primary");
+    await page.waitFor(500);
+    await page.screenshot({ path: `screenshots/client-1-send-text.png`, fullPage: true });
+    await page2.screenshot({ path: `screenshots/client-2-send-text.png`, fullPage: true });
+
+    // await (await page.$("input[type=file]")).uploadFile(`./foo.txt`);
+    // await page.waitFor(500);
+    // await page.screenshot({ path: `screenshots/client-1-send-file.png`, fullPage: true });
+    // await page2.screenshot({ path: `screenshots/client-2-send-file.png`, fullPage: true });
+
+    await page.click(".btn-default");
+    await page.waitFor(3000);
+    await page.click(".btn-default");
+    await page.waitFor(500);
+    await page.screenshot({ path: `screenshots/client-1-try-to-connect.png`, fullPage: true });
+    await page2.screenshot({ path: `screenshots/client-2-try-to-connect.png`, fullPage: true });
+
+    await (page.type as any)("textarea", "hello world!");
+    await page.click(".btn-primary");
+    await page.waitFor(500);
+    await page.screenshot({ path: `screenshots/client-1-send-text-by-webrtc.png`, fullPage: true });
+    await page2.screenshot({ path: `screenshots/client-2-send-text-by-webrtc.png`, fullPage: true });
+
     browser.close();
 })();

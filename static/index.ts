@@ -1,5 +1,5 @@
 import * as io from "socket.io-client";
-import Vue from "vue";
+import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import * as Clipboard from "clipboard";
 import * as types from "../types";
@@ -127,7 +127,7 @@ class App extends Vue {
     private dataChannelIsOpen = false;
     private splitFile = new SplitFile();
 
-    constructor(options?: Vue.ComponentOptions<Vue>) {
+    constructor(options?: ComponentOptions<Vue>) {
         super();
         const hash = document.location.hash;
         let room: string;
