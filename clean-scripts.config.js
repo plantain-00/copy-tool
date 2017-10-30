@@ -4,7 +4,7 @@ const tsFiles = `"*.ts" "static/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts"`
 const jsFiles = `"*.config.js" "static/**/*.config.js" "static_spec/**/*.config.js"`
 
 const tscCommand = `tsc`
-const file2variableCommand = `file2variable-cli static/app.template.html -o static/variables.ts --html-minify --base static --watch`
+const file2variableCommand = `file2variable-cli static/app.template.html -o static/variables.ts --html-minify --base static`
 const tscStaticCommand = `tsc -p static`
 const webpackCommand = `webpack --display-modules --config static/webpack.config.js`
 const revStaticCommand = `rev-static --config static/rev-static.config.js`
