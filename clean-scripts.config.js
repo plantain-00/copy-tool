@@ -3,24 +3,32 @@ const { Service, execAsync } = require('clean-scripts')
 const tsFiles = `"*.ts" "static/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts"`
 const jsFiles = `"*.config.js" "static/**/*.config.js" "static_spec/**/*.config.js"`
 
+const tscCommand = `tsc`
+const file2variableCommand = `file2variable-cli static/app.template.html -o static/variables.ts --html-minify --base static --watch`
+const tscStaticCommand = `tsc -p static`
+const webpackCommand = `webpack --display-modules --config static/webpack.config.js`
+const revStaticCommand = `rev-static --config static/rev-static.config.js`
+
 module.exports = {
   build: {
-    back: `tsc`,
+    back: tscCommand,
     front: [
       {
         js: [
-          `file2variable-cli static/app.template.html -o static/variables.ts --html-minify --base static`,
-          `tsc -p static`,
-          `webpack --display-modules --config static/webpack.config.js`
+          file2variableCommand,
+          tscStaticCommand,
+          webpackCommand
         ],
         css: [
           `cleancss ./node_modules/bootstrap/dist/css/bootstrap.min.css ./node_modules/github-fork-ribbon-css/gh-fork-ribbon.css ./node_modules/file-uploader-component/file-uploader.min.css -o static/vendor.bundle.css`,
-          `postcss static/index.css -o static/index.postcss.css`,
-          `cleancss static/index.postcss.css -o static/index.bundle.css`
+          [
+            `postcss static/index.css -o static/index.postcss.css`,
+            `cleancss static/index.postcss.css -o static/index.bundle.css`
+          ]
         ],
         clean: `rimraf static/*.bundle-*.js static/*.bundle-*.css`
       },
-      `rev-static --config static/rev-static.config.js`,
+      revStaticCommand,
       [
         `sw-precache --config static/sw-precache.config.js`,
         `uglifyjs static/service-worker.js -o static/service-worker.bundle.js`
@@ -55,12 +63,12 @@ module.exports = {
   },
   release: `clean-release`,
   watch: {
-    back: `tsc --watch`,
-    template: `file2variable-cli static/app.template.html -o static/variables.ts --html-minify --base static --watch`,
-    front: `tsc -p static --watch`,
-    webpack: `webpack --config static/webpack.config.js --watch`,
+    back: `${tscCommand} --watch`,
+    template: `${file2variableCommand} --watch`,
+    front: `${tscStaticCommand} --watch`,
+    webpack: `${webpackCommand} --watch`,
     css: `watch-then-execute "static/index.css" --script "clean-scripts build.front[0].css[1]"`,
-    rev: `rev-static --config static/rev-static.config.js --watch`,
+    rev: `${revStaticCommand} --watch`,
     sw: `watch-then-execute "static/vendor.bundle-*.js" "static/vendor.bundle-*.css" "static/index.html" "static/worker.bundle.js" --script "clean-scripts build.front[2]"`
   },
   screenshot: [
