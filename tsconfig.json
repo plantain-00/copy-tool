@@ -22,9 +22,10 @@
         "screenshots",
         "prerender"
     ],
+    "baseUrl": "./",
     "paths": {
         "date-fns/format": [
-            "node_modules/date-fns/typings"
+            "manual_typings/date-fns/format"
         ]
     }
 }
