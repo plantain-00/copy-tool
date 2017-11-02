@@ -21,5 +21,10 @@
         "node_modules/",
         "screenshots",
         "prerender"
-    ]
+    ],
+    "paths": {
+        "date-fns/format": [
+            "node_modules/date-fns/typings"
+        ]
+    }
 }
