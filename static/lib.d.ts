@@ -18,7 +18,7 @@ declare interface RTCPeerConnection {
     createDataChannel(channel: string): RTCDataChannel;
 }
 
-declare module 'date-fns/format' {
-    import { format } from 'date-fns'
-    export = format
+declare module "date-fns/format" {
+    import { format } from "date-fns";
+    export = format;
 }
