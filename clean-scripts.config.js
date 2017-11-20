@@ -42,7 +42,7 @@ module.exports = {
     ts: `tslint ${tsFiles}`,
     js: `standard ${jsFiles}`,
     export: `no-unused-export ${tsFiles}`,
-    commitlint: `commitlint --from=HEAD~1`
+    commit: `commitlint --from=HEAD~1`
   },
   test: {
     jasmine: [
