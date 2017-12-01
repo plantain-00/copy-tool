@@ -17,8 +17,8 @@ module.exports = {
   ],
   releaseRepository: 'https://github.com/plantain-00/copy-tool-release.git',
   postScript: [
-    'cd [dir] && rm -rf .git',
-    'cp Dockerfile [dir]',
-    'cd [dir] && docker build -t plantain/copy-tool . && docker push plantain/copy-tool'
+    'cd "[dir]" && rm -rf .git',
+    'cp Dockerfile "[dir]"',
+    'cd "[dir]" && docker build -t plantain/copy-tool . && docker push plantain/copy-tool'
   ]
 }
