@@ -9,4 +9,3 @@ import "webrtc-adapter/out/adapter_no_edge_no_global";
 import "vue";
 import "vue-class-component";
 import "js-split-file/browser";
-import "date-fns/format";

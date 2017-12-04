@@ -4,7 +4,6 @@ import Component from "vue-class-component";
 import * as Clipboard from "clipboard";
 import * as types from "../types";
 import SplitFile from "js-split-file/browser";
-import * as format from "date-fns/format";
 import { appTemplateHtml } from "./variables";
 import { Locale } from "file-uploader-component/vue";
 
@@ -17,8 +16,12 @@ function getRoom() {
     return Math.round(Math.random() * 35 * Math.pow(36, 9)).toString(36);
 }
 
+function formatTimeNumber(num: number) {
+    return num < 10 ? "0" + num : num.toString();
+}
+
 function getNow() {
-    return format(new Date(), "HH:mm:ss");
+    return `${formatTimeNumber(new Date().getHours())}:${formatTimeNumber(new Date().getMinutes())}:${formatTimeNumber(new Date().getSeconds())}`;
 }
 
 import * as QRCode from "qrcode";
