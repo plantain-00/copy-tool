@@ -29,7 +29,7 @@ module.exports = {
           webpackCommand
         ],
         css: [
-          `cleancss ./node_modules/bootstrap/dist/css/bootstrap.min.css ./node_modules/github-fork-ribbon-css/gh-fork-ribbon.css ./node_modules/file-uploader-component/file-uploader.min.css -o static/vendor.bundle.css`,
+          `cleancss ./node_modules/bootstrap/dist/css/bootstrap.min.css ./node_modules/github-fork-ribbon-css/gh-fork-ribbon.css ./node_modules/file-uploader-component/dist/file-uploader.min.css -o static/vendor.bundle.css`,
           cssCommand
         ],
         clean: `rimraf static/*.bundle-*.js static/*.bundle-*.css`

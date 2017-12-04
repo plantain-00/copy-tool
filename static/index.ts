@@ -5,7 +5,7 @@ import * as Clipboard from "clipboard";
 import * as types from "../types";
 import SplitFile from "js-split-file/browser";
 import { appTemplateHtml } from "./variables";
-import { Locale } from "file-uploader-component/vue";
+import { Locale } from "file-uploader-vue-component";
 
 const supportWebRTC = !!window.RTCPeerConnection;
 
@@ -391,7 +391,8 @@ if (navigator.serviceWorker) {
     });
 }
 
-import { locale as zhCNLocale } from "file-uploader-component/locales/zh-CN.js";
+// tslint:disable-next-line:no-implicit-dependencies
+import { locale as zhCNLocale } from "file-uploader-component/dist/locales/zh-CN";
 
 if (navigator.language === "zh-CN") {
     locale = zhCNLocale;
