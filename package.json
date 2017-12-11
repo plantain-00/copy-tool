@@ -29,17 +29,17 @@
     "socket.io": "2.0.4"
   },
   "devDependencies": {
-    "@commitlint/cli": "5.2.0",
+    "@commitlint/cli": "5.2.5",
     "@commitlint/config-angular": "5.1.1",
     "@types/clipboard": "1.5.35",
     "@types/express": "4.0.39",
     "@types/jasmine": "2.8.2",
     "@types/minimist": "1.2.0",
-    "@types/puppeteer": "0.13.6",
+    "@types/puppeteer": "0.13.7",
     "@types/qrcode": "0.8.0",
     "@types/socket.io": "1.4.31",
     "@types/socket.io-client": "1.4.32",
-    "autoprefixer": "7.2.0",
+    "autoprefixer": "7.2.2",
     "bootstrap": "3.3.7",
     "clean-css-cli": "4.1.10",
     "clean-scripts": "1.7.0",
@@ -51,7 +51,7 @@
     "js-split-file": "2.0.0",
     "karma": "1.7.1",
     "karma-chrome-launcher": "2.2.0",
-    "karma-firefox-launcher": "1.0.1",
+    "karma-firefox-launcher": "1.1.0",
     "karma-jasmine": "1.1.1",
     "karma-webpack": "2.0.6",
     "no-unused-export": "1.4.3",
@@ -63,14 +63,14 @@
     "socket.io-client": "2.0.4",
     "standard": "10.0.3",
     "sw-precache": "5.2.0",
-    "tslib": "1.8.0",
+    "tslib": "1.8.1",
     "tslint": "5.8.0",
     "typescript": "2.6.1",
     "uglify-js": "^2.8",
     "vue": "2.5.9",
     "vue-class-component": "6.1.1",
     "watch-then-execute": "1.1.1",
-    "webpack": "3.9.1",
-    "webrtc-adapter": "6.0.2"
+    "webpack": "3.10.0",
+    "webrtc-adapter": "6.0.3"
   }
 }
