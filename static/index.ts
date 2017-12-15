@@ -4,7 +4,7 @@ import Component from "vue-class-component";
 import * as Clipboard from "clipboard";
 import * as types from "../types";
 import SplitFile from "js-split-file/browser";
-import { appTemplateHtml } from "./variables";
+import { appTemplateHtml, appTemplateHtmlStatic } from "./variables";
 import { Locale } from "file-uploader-vue-component";
 
 const supportWebRTC = !!window.RTCPeerConnection;
@@ -112,18 +112,19 @@ function getCookie(name: string) {
 const worker = new Worker("worker.bundle.js");
 
 @Component({
-    template: appTemplateHtml,
+    render: appTemplateHtml,
+    staticRenderFns: appTemplateHtmlStatic,
 })
-class App extends Vue {
+export class App extends Vue {
     acceptMessages: (TextData | FileData)[] = [];
     newText = "";
-    id = 1;
     files: Block[] = [];
     speed = 100;
     locale = locale;
 
     dataChannel: RTCDataChannel | null = null;
 
+    private id = 1;
     private socket: SocketIOClient.Socket;
     private clientCount = 0;
     private peerConnection = supportWebRTC ? new RTCPeerConnection({}) : null;

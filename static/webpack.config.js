@@ -27,12 +27,7 @@ module.exports = [
       new webpack.optimize.CommonsChunkPlugin({
         name: ['index', 'vendor']
       })
-    ],
-    resolve: {
-      alias: {
-        'vue$': 'vue/dist/vue.esm.js'
-      }
-    }
+    ]
   },
   {
     entry: {
