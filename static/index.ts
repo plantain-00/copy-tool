@@ -121,6 +121,7 @@ export class App extends Vue {
     files: Block[] = [];
     speed = 100;
     locale = locale;
+    room = "";
 
     dataChannel: RTCDataChannel | null = null;
 
@@ -134,40 +135,13 @@ export class App extends Vue {
     constructor(options?: ComponentOptions<Vue>) {
         super();
         const hash = document.location.hash;
-        let room: string;
-        if (hash && hash !== "#") {
-            room = hash.substr(1);
-        } else {
-            room = getCookie("room") || getRoom();
-            document.location.hash = "#" + room;
-        }
+        this.room = (hash && hash !== "#") ? hash.substr(1) : getCookie("room") || localStorage.getItem("room") || getRoom();
 
-        const connect = () => {
-            this.socket = io("/", { query: { room } });
-            this.socket.on("copy", this.onMessageRecieved);
-            this.socket.on("message_sent", this.onMessageSent);
-            this.socket.on("client_count", this.onClientCount);
-            if (supportWebRTC) {
-                this.socket.on("offer", this.onGetOffer);
-                this.socket.on("answer", this.onGetAnswer);
-            }
-            document.cookie = `room=${room}`;
-            drawQRCode();
-        };
-        connect();
-        window.onhashchange = (e => {
-            if (e.newURL) {
-                const index = e.newURL.indexOf("#");
-                if (index > -1) {
-                    const newRoom = e.newURL.substring(index + 1);
-                    if (room !== newRoom) {
-                        this.socket.disconnect();
-                        room = newRoom;
-                        connect();
-                    }
-                }
-            }
-        });
+        window.onhashchange = this.onhashchange;
+
+        this.connect(this.room);
+        this.changeRoom(this.room);
+
         if (this.peerConnection) {
             this.dataChannel = this.peerConnection.createDataChannel("copy_tool_channel_name");
             this.peerConnection.ondatachannel = event => {
@@ -235,6 +209,15 @@ export class App extends Vue {
     }
     get canCreateOffer() {
         return supportWebRTC && !this.dataChannelIsOpen;
+    }
+    changeRoom(room: string) {
+        this.room = room;
+        document.location.hash = "#" + room;
+        localStorage.setItem("room", room);
+        if (this.socket) {
+            this.socket.disconnect();
+        }
+        this.connect(room);
     }
     tryToConnect() {
         if (this.peerConnection) {
@@ -310,6 +293,30 @@ export class App extends Vue {
                 name: fileName,
                 type: file.type,
             });
+        }
+    }
+    private connect(room: string) {
+        this.socket = io("/", { query: { room } });
+        this.socket.on("copy", this.onMessageRecieved);
+        this.socket.on("message_sent", this.onMessageSent);
+        this.socket.on("client_count", this.onClientCount);
+        if (supportWebRTC) {
+            this.socket.on("offer", this.onGetOffer);
+            this.socket.on("answer", this.onGetAnswer);
+        }
+        document.cookie = `room=${room}`;
+        drawQRCode();
+    }
+    private onhashchange(e: HashChangeEvent) {
+        if (e.newURL) {
+            const index = e.newURL.indexOf("#");
+            if (index > -1) {
+                const newRoom = e.newURL.substring(index + 1);
+                if (this.room !== newRoom) {
+                    this.room = newRoom;
+                    this.changeRoom(this.room);
+                }
+            }
         }
     }
     private onGetAnswer(data: { sid: string, answer: types.Desciprtion }) {

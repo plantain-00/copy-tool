@@ -6,6 +6,11 @@
     </div>
     <div class="row">
         <div class="col-md-12">
+            <input class="form-control" :value="room" @change="changeRoom($event.target.value)">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <textarea class="form-control" rows="5" v-model="newText"></textarea>
         </div>
     </div>
