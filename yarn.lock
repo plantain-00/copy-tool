@@ -4558,6 +4558,21 @@ relateurl@0.2.x:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
 
+relative-time-component@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/relative-time-component/-/relative-time-component-4.0.2.tgz#7faec4f4f4f0bed4ca818131b4c7cf3635ac1ae7"
+  dependencies:
+    "@types/node" "*"
+    tslib "1"
+
+relative-time-vue-component@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/relative-time-vue-component/-/relative-time-vue-component-4.1.0.tgz#441a29c1634b306a92f9ce7985b402a1c800270e"
+  dependencies:
+    relative-time-component "^4.0.2"
+    vue "2"
+    vue-class-component "6"
+
 remove-trailing-separator@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"

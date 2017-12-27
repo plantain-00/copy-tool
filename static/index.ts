@@ -16,14 +16,6 @@ function getRoom() {
     return Math.round(Math.random() * 35 * Math.pow(36, 9)).toString(36);
 }
 
-function formatTimeNumber(num: number) {
-    return num < 10 ? "0" + num : num.toString();
-}
-
-function getNow() {
-    return `${formatTimeNumber(new Date().getHours())}:${formatTimeNumber(new Date().getMinutes())}:${formatTimeNumber(new Date().getSeconds())}`;
-}
-
 import * as QRCode from "qrcode";
 
 function printInConsole(message: any) {
@@ -49,7 +41,7 @@ const enum DataKind {
 type TextData = {
     kind: DataKind.text;
     value: string;
-    moment?: string;
+    moment?: number;
     id?: number;
 };
 
@@ -64,7 +56,7 @@ type FileData = {
     kind: DataKind.file;
     value: File;
     url: string;
-    moment: string;
+    moment: number;
     id: number;
 };
 
@@ -150,7 +142,7 @@ export class App extends Vue {
                     this.acceptMessages.unshift({
                         kind: DataKind.text,
                         value: `The connection is opened.`,
-                        moment: getNow(),
+                        moment: Date.now(),
                         id: this.id++,
                     });
                 };
@@ -159,7 +151,7 @@ export class App extends Vue {
                     this.acceptMessages.unshift({
                         kind: DataKind.text,
                         value: `The connection is closed.`,
-                        moment: getNow(),
+                        moment: Date.now(),
                         id: this.id++,
                     });
                 };
@@ -168,7 +160,7 @@ export class App extends Vue {
                         this.acceptMessages.unshift({
                             kind: DataKind.text,
                             value: e.data,
-                            moment: getNow(),
+                            moment: Date.now(),
                             id: this.id++,
                         });
                         notify("You got a text message!");
@@ -196,7 +188,7 @@ export class App extends Vue {
                                 kind: DataKind.file,
                                 value: file,
                                 url: URL.createObjectURL(file),
-                                moment: getNow(),
+                                moment: Date.now(),
                                 id: this.id++,
                             });
                             this.files.splice(currentBlockIndex, 1);
@@ -233,7 +225,7 @@ export class App extends Vue {
             this.acceptMessages.unshift({
                 kind: DataKind.text,
                 value: "No clients to sent.",
-                moment: getNow(),
+                moment: Date.now(),
                 id: this.id++,
             });
             return;
@@ -242,7 +234,7 @@ export class App extends Vue {
             this.acceptMessages.unshift({
                 kind: DataKind.text,
                 value: "No text to sent.",
-                moment: getNow(),
+                moment: Date.now(),
                 id: this.id++,
             });
             return;
@@ -263,7 +255,7 @@ export class App extends Vue {
             this.acceptMessages.unshift({
                 kind: DataKind.text,
                 value: "No clients to sent.",
-                moment: getNow(),
+                moment: Date.now(),
                 id: this.id++,
             });
             return;
@@ -282,7 +274,7 @@ export class App extends Vue {
                 this.acceptMessages.unshift({
                     kind: DataKind.text,
                     value: "the file is too large(>= 10MB).",
-                    moment: getNow(),
+                    moment: Date.now(),
                     id: this.id++,
                 });
                 return;
@@ -342,12 +334,12 @@ export class App extends Vue {
                 kind: DataKind.file,
                 value: file,
                 url: URL.createObjectURL(file),
-                moment: getNow(),
+                moment: Date.now(),
                 id: this.id++,
             });
             notify("You got a file!");
         } else {
-            data.moment = getNow();
+            data.moment = Date.now();
             data.id = this.id++;
             this.acceptMessages.unshift(data);
             notify("You got a text message!");
@@ -357,7 +349,7 @@ export class App extends Vue {
         this.acceptMessages.unshift({
             kind: DataKind.text,
             value: `the ${data.kind} is sent successfully to ${this.clientCount} clients.`,
-            moment: getNow(),
+            moment: Date.now(),
             id: this.id++,
         });
     }

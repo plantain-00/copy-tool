@@ -56,7 +56,9 @@
         <div class="col-md-12">
             <ul>
                 <li v-for="(message, index) in acceptMessages" :key="message.id">
-                    <span class="label label-default">{{message.moment}}</span>
+                    <span class="label label-default">
+                        <relative-time :time="message.moment"></relative-time>
+                    </span>
                     <span class="label label-info">{{message.kind}}</span>
                     <button v-if="message.kind === 'text'" class="btn btn-xs btn-default clipboard" :data-clipboard-target="'#clipboard_' + message.id">copy</button>
                     <pre v-if="message.kind === 'text'" :id="'clipboard_' + message.id">{{message.value}}</pre>
