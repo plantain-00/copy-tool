@@ -2038,17 +2038,17 @@ file-entry-cache@^2.0.0:
     flat-cache "^1.2.1"
     object-assign "^4.0.1"
 
-file-uploader-component@^7.0.1:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/file-uploader-component/-/file-uploader-component-7.0.1.tgz#a2e717b2badbf26f7a3533b5e999a0412db758ce"
+file-uploader-component@^7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/file-uploader-component/-/file-uploader-component-7.1.2.tgz#e831b2e5a1db9e5b9f78797e8c65d3f1f9aa0051"
   dependencies:
     tslib "1"
 
-file-uploader-vue-component@7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/file-uploader-vue-component/-/file-uploader-vue-component-7.1.0.tgz#2356ccc9a9d97b6d64ad9214f1bfcfe4f1ccabd7"
+file-uploader-vue-component@7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/file-uploader-vue-component/-/file-uploader-vue-component-7.1.2.tgz#d5274ee318f88b08280933147fe47582fbef883d"
   dependencies:
-    file-uploader-component "^7.0.1"
+    file-uploader-component "^7.1.2"
     vue "2"
     vue-class-component "6"
 
