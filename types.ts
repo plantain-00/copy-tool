@@ -1,12 +1,20 @@
 export const enum DataKind {
     text = "text",
     file = "file",
+    base64 = "base64",
 }
 
 export type CopyData =
     {
         kind: DataKind.text,
         value: string,
+    }
+    |
+    {
+        kind: DataKind.base64,
+        value: string,
+        name: string,
+        type: string,
     }
     |
     {

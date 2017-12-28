@@ -2,7 +2,7 @@ import * as io from "socket.io-client";
 import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import * as Clipboard from "clipboard";
-import * as types from "../types";
+import { DataKind, CopyData, WorkMessage, MessageKind, Desciprtion } from "../types";
 import SplitFile from "js-split-file/browser";
 import { appTemplateHtml, appTemplateHtmlStatic } from "./variables";
 import { Locale } from "file-uploader-vue-component";
@@ -33,16 +33,21 @@ function drawQRCode() {
 
 new Clipboard(".clipboard");
 
-const enum DataKind {
-    text = "text",
-    file = "file",
-}
-
 type TextData = {
     kind: DataKind.text;
     value: string;
     moment?: number;
     id?: number;
+};
+
+type Base64Data = {
+    kind: DataKind.base64;
+    value: string;
+    url: string;
+    name: string;
+    type: string;
+    moment: number;
+    id: number;
 };
 
 type ArrayBufferData = {
@@ -108,7 +113,7 @@ const worker = new Worker("worker.bundle.js");
     staticRenderFns: appTemplateHtmlStatic,
 })
 export class App extends Vue {
-    acceptMessages: (TextData | FileData)[] = [];
+    acceptMessages: (TextData | Base64Data | FileData)[] = [];
     newText = "";
     files: Block[] = [];
     speed = 100;
@@ -242,8 +247,8 @@ export class App extends Vue {
         if (this.dataChannelIsOpen) {
             this.dataChannel!.send(this.newText);
         } else {
-            const copyData: types.CopyData = {
-                kind: types.DataKind.text,
+            const copyData: CopyData = {
+                kind: DataKind.text,
                 value: this.newText,
             };
             this.socket.emit("copy", copyData);
@@ -263,8 +268,8 @@ export class App extends Vue {
         const extensionName = file.type.split("/")[1];
         const fileName = (file as File).name || `no name.${extensionName}`;
         if (this.dataChannelIsOpen) {
-            const message: types.WorkMessage = {
-                kind: types.MessageKind.splitFile,
+            const message: WorkMessage = {
+                kind: MessageKind.splitFile,
                 file,
                 fileName,
             };
@@ -311,11 +316,11 @@ export class App extends Vue {
             }
         }
     }
-    private onGetAnswer(data: { sid: string, answer: types.Desciprtion }) {
+    private onGetAnswer(data: { sid: string, answer: Desciprtion }) {
         const answer = new RTCSessionDescription(data.answer);
         this.peerConnection!.setRemoteDescription(answer);
     }
-    private onGetOffer(data: { sid: string, offer: types.Desciprtion }) {
+    private onGetOffer(data: { sid: string, offer: Desciprtion }) {
         const offer = new RTCSessionDescription(data.offer);
         this.peerConnection!.setRemoteDescription(offer)
             .then(() => this.peerConnection!.createAnswer())
@@ -327,13 +332,24 @@ export class App extends Vue {
                 });
             });
     }
-    private onMessageRecieved(data: TextData | ArrayBufferData) {
+    private onMessageRecieved(data: TextData | Base64Data | ArrayBufferData) {
         if (data.kind === DataKind.file) {
             const file = new File([data.value], data.name, { type: data.type });
             this.acceptMessages.unshift({
                 kind: DataKind.file,
                 value: file,
                 url: URL.createObjectURL(file),
+                moment: Date.now(),
+                id: this.id++,
+            });
+            notify("You got a file!");
+        } else if (data.kind === DataKind.base64) {
+            this.acceptMessages.unshift({
+                kind: DataKind.base64,
+                value: data.value,
+                url: `data:${data.type};base64,${data.value}`,
+                name: data.name,
+                type: data.type,
                 moment: Date.now(),
                 id: this.id++,
             });
@@ -379,8 +395,8 @@ setInterval(() => {
 }, 1000);
 
 worker.onmessage = e => {
-    const message: types.WorkMessage = e.data;
-    if (message.kind === types.MessageKind.splitFileResult) {
+    const message: WorkMessage = e.data;
+    if (message.kind === MessageKind.splitFileResult) {
         blocks.push(...message.blocks);
     }
 };

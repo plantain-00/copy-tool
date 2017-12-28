@@ -63,6 +63,7 @@
                     <button v-if="message.kind === 'text'" class="btn btn-xs btn-default clipboard" :data-clipboard-target="'#clipboard_' + message.id">copy</button>
                     <pre v-if="message.kind === 'text'" :id="'clipboard_' + message.id">{{message.value}}</pre>
                     <a v-if="message.kind === 'file'" class="btn btn-link" :href="message.url" :download="message.value.name">{{message.value.name}}</a>
+                    <a v-if="message.kind === 'base64'" class="btn btn-link" :href="message.url" :download="message.name">{{message.name}}</a>
                 </li>
             </ul>
         </div>
