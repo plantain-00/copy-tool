@@ -132,12 +132,12 @@ export class App extends Vue {
     constructor(options?: ComponentOptions<Vue>) {
         super();
         const hash = document.location.hash;
-        this.room = (hash && hash !== "#") ? hash.substr(1) : getCookie("room") || localStorage.getItem("room") || getRoom();
+        const room = (hash && hash !== "#") ? hash.substr(1) : getCookie("room") || localStorage.getItem("room") || getRoom();
 
         window.onhashchange = this.onhashchange;
 
-        this.connect(this.room);
-        this.changeRoom(this.room);
+        this.room = room;
+        this.changeRoom(room);
 
         if (this.peerConnection) {
             this.dataChannel = this.peerConnection.createDataChannel("copy_tool_channel_name");
@@ -311,7 +311,7 @@ export class App extends Vue {
                 const newRoom = e.newURL.substring(index + 1);
                 if (this.room !== newRoom) {
                     this.room = newRoom;
-                    this.changeRoom(this.room);
+                    this.changeRoom(newRoom);
                 }
             }
         }
