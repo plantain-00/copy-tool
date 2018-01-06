@@ -24,7 +24,7 @@ export type CopyData =
         type: string,
     };
 
-export type Desciprtion = {
+export type Description = {
     type: "offer" | "answer",
     sdp: string,
 };

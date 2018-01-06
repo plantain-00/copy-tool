@@ -2,7 +2,7 @@ import * as io from "socket.io-client";
 import Vue, { ComponentOptions } from "vue";
 import Component from "vue-class-component";
 import * as Clipboard from "clipboard";
-import { DataKind, CopyData, WorkMessage, MessageKind, Desciprtion } from "../types";
+import { DataKind, CopyData, WorkMessage, MessageKind, Description } from "../types";
 import SplitFile from "js-split-file/browser";
 import { appTemplateHtml, appTemplateHtmlStatic } from "./variables";
 import { Locale } from "file-uploader-vue-component";
@@ -316,11 +316,11 @@ export class App extends Vue {
             }
         }
     }
-    private onGetAnswer(data: { sid: string, answer: Desciprtion }) {
+    private onGetAnswer(data: { sid: string, answer: Description }) {
         const answer = new RTCSessionDescription(data.answer);
         this.peerConnection!.setRemoteDescription(answer);
     }
-    private onGetOffer(data: { sid: string, offer: Desciprtion }) {
+    private onGetOffer(data: { sid: string, offer: Description }) {
         const offer = new RTCSessionDescription(data.offer);
         this.peerConnection!.setRemoteDescription(offer)
             .then(() => this.peerConnection!.createAnswer())

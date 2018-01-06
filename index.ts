@@ -67,7 +67,7 @@ io.on("connection", socket => {
             });
         });
 
-        socket.on("offer", (data: types.Desciprtion) => {
+        socket.on("offer", (data: types.Description) => {
             const json = {
                 sid: socket.id,
                 offer: data,
@@ -84,7 +84,7 @@ io.on("connection", socket => {
             }
         });
 
-        socket.on("answer", (data: { sid: string; answer: types.Desciprtion }) => {
+        socket.on("answer", (data: { sid: string; answer: types.Description }) => {
             io.in(data.sid).emit("answer", {
                 sid: socket.id,
                 answer: data.answer,
