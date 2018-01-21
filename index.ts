@@ -12,7 +12,6 @@ const host = argv.h || 'localhost'
 app.use(express.static(__dirname + '/static'))
 
 const server = app.listen(port, host, () => {
-    // tslint:disable-next-line:no-console
   console.log(`api Server is listening: ${host}:${port}`)
 })
 

@@ -17,7 +17,6 @@ onmessage = e => {
   if (message.kind === types.MessageKind.splitFile) {
     blobToUInt8Array(message.file, uint8Array => {
       const blocks = splitFile.split(uint8Array, message.fileName)
-            // tslint:disable-next-line:no-console
       console.log(`cost ${(Date.now() - startTime) / 1000.0} s`)
       const result: types.WorkMessage = {
         kind: types.MessageKind.splitFileResult,

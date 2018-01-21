@@ -19,7 +19,6 @@ function getRoom () {
 import * as QRCode from 'qrcode'
 
 function printInConsole (message: any) {
-    // tslint:disable-next-line:no-console
   console.log(message)
 }
 
@@ -384,7 +383,7 @@ export class App extends Vue {
 }
 
 function start () {
-    // tslint:disable-next-line:no-unused-expression
+  // tslint:disable-next-line:no-unused-expression
   app = new App({ el: '#body' })
 }
 
@@ -411,7 +410,6 @@ if (navigator.serviceWorker) {
   })
 }
 
-// tslint:disable-next-line:no-implicit-dependencies
 import { locale as zhCNLocale } from 'file-uploader-component/dist/locales/zh-CN'
 
 if (navigator.language === 'zh-CN') {
