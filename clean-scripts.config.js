@@ -1,7 +1,7 @@
 const { Service, checkGitStatus, executeScriptAsync } = require('clean-scripts')
 const { watch } = require('watch-then-execute')
 
-const tsFiles = `"*.ts" "static/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts"`
+const tsFiles = `"*.ts" "static/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts" "screenshots/**/*.ts"`
 const jsFiles = `"*.config.js" "static/**/*.config.js" "static_spec/**/*.config.js"`
 
 const tscCommand = `tsc`
