@@ -21,14 +21,14 @@ import * as puppeteer from 'puppeteer'
   await page.screenshot({ path: `screenshots/client-1-send-text.png` })
   await page2.screenshot({ path: `screenshots/client-2-send-text.png` })
 
-    // await (await page.$("input[type=file]")).uploadFile(`./foo.txt`);
-    // await page.waitFor(500);
-    // await page.screenshot({ path: `screenshots/client-1-send-file.png` });
-    // await page2.screenshot({ path: `screenshots/client-2-send-file.png` });
+  await (await page.$('input[type=file]'))!.uploadFile(`./foo.txt`)
+  await page.waitFor(500)
+  await page.screenshot({ path: `screenshots/client-1-send-file.png` })
+  await page2.screenshot({ path: `screenshots/client-2-send-file.png` })
 
-  await page.click('.btn-secondary')
+  await page.click('.btn-default')
   await page.waitFor(3000)
-  await page.click('.btn-secondary')
+  await page.click('.btn-default')
   await page.waitFor(500)
   await page.screenshot({ path: `screenshots/client-1-try-to-connect.png` })
   await page2.screenshot({ path: `screenshots/client-2-try-to-connect.png` })
