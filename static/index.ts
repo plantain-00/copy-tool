@@ -125,7 +125,7 @@ export class App extends Vue {
   dataChannel: RTCDataChannel | null = null
 
   private id = 1
-  private socket: SocketIOClient.Socket
+  private socket: SocketIOClient.Socket | undefined
   private clientCount = 0
   private peerConnection = supportWebRTC ? new RTCPeerConnection({}) : null
   private dataChannelIsOpen = false
@@ -223,7 +223,7 @@ export class App extends Vue {
       this.peerConnection.createOffer()
                 .then(offer => this.peerConnection!.setLocalDescription(offer))
                 .then(() => {
-                  this.socket.emit('offer', this.peerConnection!.localDescription!.toJSON())
+                  this.socket!.emit('offer', this.peerConnection!.localDescription!.toJSON())
                 })
     }
   }
@@ -253,7 +253,7 @@ export class App extends Vue {
         kind: DataKind.text,
         value: this.newText
       }
-      this.socket.emit('copy', copyData)
+      this.socket!.emit('copy', copyData)
     }
     this.newText = ''
   }
@@ -286,7 +286,7 @@ export class App extends Vue {
         })
         return
       }
-      this.socket.emit('copy', {
+      this.socket!.emit('copy', {
         kind: DataKind.file,
         value: file,
         name: fileName,
@@ -328,7 +328,7 @@ export class App extends Vue {
             .then(() => this.peerConnection!.createAnswer())
             .then(answer => this.peerConnection!.setLocalDescription(answer))
             .then(() => {
-              this.socket.emit('answer', {
+              this.socket!.emit('answer', {
                 sid: data.sid,
                 answer: this.peerConnection!.localDescription!.toJSON()
               })
