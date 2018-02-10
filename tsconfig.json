@@ -1,25 +1,12 @@
 {
-    "compilerOptions": {
-        "target": "esnext",
-        "module": "commonjs",
-
-        "declaration": false,
-
-        "strict": true,
-        "noUnusedLocals": true,
-        "noImplicitReturns": true,
-
-        "skipLibCheck": true,
-        "importHelpers": true,
-        "jsx": "react",
-        "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true,
-        "newLine": "LF"
-    },
-    "exclude": [
-        "static/",
-        "node_modules/",
-        "screenshots",
-        "prerender"
-    ]
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "commonjs"
+  },
+  "exclude": [
+    "static/",
+    "node_modules/",
+    "screenshots",
+    "prerender"
+  ]
 }

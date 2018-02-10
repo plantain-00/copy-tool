@@ -1,31 +1,12 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "esnext",
-        "moduleResolution": "node",
-
-        "declaration": false,
-        "lib": [
-            "es5",
-            "dom",
-            "es2015"
-        ],
-
-        "strict": true,
-        "noUnusedLocals": true,
-        "noImplicitReturns": true,
-
-        "skipLibCheck": true,
-        "importHelpers": true,
-        "jsx": "react",
-        "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true,
-        "newLine": "LF"
-    },
-    "include": [
-        "*.ts"
-    ],
-    "exclude": [
-        "node_modules/"
-    ]
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "es5"
+  },
+  "include": [
+    "*.ts"
+  ],
+  "exclude": [
+    "node_modules/"
+  ]
 }
