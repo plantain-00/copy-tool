@@ -320,19 +320,19 @@ export class App extends Vue {
   }
   private onGetAnswer (data: { sid: string, answer: Description }) {
     const answer = new RTCSessionDescription(data.answer)
-    this.peerConnection!.setRemoteDescription(answer)
+    this.peerConnection!.setRemoteDescription(answer as any)
   }
   private onGetOffer (data: { sid: string, offer: Description }) {
     const offer = new RTCSessionDescription(data.offer)
-    this.peerConnection!.setRemoteDescription(offer)
-            .then(() => this.peerConnection!.createAnswer())
-            .then(answer => this.peerConnection!.setLocalDescription(answer))
-            .then(() => {
-              this.socket!.emit('answer', {
-                sid: data.sid,
-                answer: this.peerConnection!.localDescription!.toJSON()
-              })
-            })
+    this.peerConnection!.setRemoteDescription(offer as any)
+      .then(() => this.peerConnection!.createAnswer())
+      .then(answer => this.peerConnection!.setLocalDescription(answer))
+      .then(() => {
+        this.socket!.emit('answer', {
+          sid: data.sid,
+          answer: this.peerConnection!.localDescription!.toJSON()
+        })
+      })
   }
   private onMessageRecieved (data: TextData | Base64Data | ArrayBufferData) {
     if (data.kind === DataKind.file) {
