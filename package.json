@@ -35,7 +35,7 @@
     "@types/express": "4.11.1",
     "@types/jasmine": "2.8.6",
     "@types/minimist": "1.2.0",
-    "@types/puppeteer": "1.2.0",
+    "@types/puppeteer": "1.2.1",
     "@types/qrcode": "0.8.1",
     "@types/socket.io": "1.4.33",
     "@types/socket.io-client": "1.4.32",
@@ -73,8 +73,8 @@
     "vue": "2.5.16",
     "vue-class-component": "6.2.0",
     "watch-then-execute": "1.1.1",
-    "webpack": "4.4.1",
-    "webpack-cli": "2.0.13",
+    "webpack": "4.5.0",
+    "webpack-cli": "2.0.14",
     "webrtc-adapter": "6.1.4"
   }
 }

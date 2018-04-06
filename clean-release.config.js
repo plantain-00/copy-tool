@@ -15,6 +15,7 @@ module.exports = {
   ],
   exclude: [
   ],
+  askVersion: true,
   releaseRepository: 'https://github.com/plantain-00/copy-tool-release.git',
   postScript: [
     'cd "[dir]" && rm -rf .git',
