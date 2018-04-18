@@ -1,5 +1,6 @@
 module.exports = [
   {
+    mode: process.env.NODE_ENV,
     entry: {
       index: './static/index'
     },
@@ -20,6 +21,7 @@ module.exports = [
     }
   },
   {
+    mode: process.env.NODE_ENV,
     entry: {
       worker: './static/worker'
     },

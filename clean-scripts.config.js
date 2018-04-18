@@ -1,8 +1,10 @@
-const { Service, checkGitStatus, executeScriptAsync } = require('clean-scripts')
+const { Service, executeScriptAsync } = require('clean-scripts')
 const { watch } = require('watch-then-execute')
 
 const tsFiles = `"*.ts" "static/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts" "screenshots/**/*.ts"`
 const jsFiles = `"*.config.js" "static/**/*.config.js" "static_spec/**/*.config.js"`
+
+const isDev = process.env.NODE_ENV === 'development'
 
 const tscCommand = `tsc`
 const file2variableCommand = `file2variable-cli --config static/file2variable.config.js`
@@ -13,7 +15,7 @@ const cssCommand = [
   `postcss static/index.css -o static/index.postcss.css`,
   `cleancss static/index.postcss.css -o static/index.bundle.css`
 ]
-const swCommand = [
+const swCommand = isDev ? undefined : [
   `sw-precache --config static/sw-precache.config.js`,
   `uglifyjs static/service-worker.js -o static/service-worker.bundle.js`
 ]
@@ -53,8 +55,7 @@ module.exports = {
     karma: [
       'tsc -p static_spec',
       'karma start static_spec/karma.config.js'
-    ],
-    consistency: () => checkGitStatus()
+    ]
   },
   fix: {
     ts: `tslint --fix ${tsFiles}`,
