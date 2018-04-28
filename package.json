@@ -38,11 +38,11 @@
     "@types/express": "4.11.1",
     "@types/jasmine": "2.8.6",
     "@types/minimist": "1.2.0",
-    "@types/puppeteer": "1.2.1",
+    "@types/puppeteer": "1.2.3",
     "@types/qrcode": "0.8.1",
     "@types/socket.io": "1.4.33",
     "@types/socket.io-client": "1.4.32",
-    "autoprefixer": "8.3.0",
+    "autoprefixer": "8.4.1",
     "bootstrap": "4.1.0",
     "clean-css-cli": "4.1.11",
     "clean-scripts": "1.8.0",
@@ -76,7 +76,7 @@
     "vue-class-component": "6.2.0",
     "watch-then-execute": "1.1.1",
     "webpack": "4.6.0",
-    "webpack-cli": "2.0.14",
+    "webpack-cli": "2.0.15",
     "webrtc-adapter": "6.1.5"
   }
 }
