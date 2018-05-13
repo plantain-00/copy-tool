@@ -3,7 +3,7 @@ import SplitFile from 'js-split-file/browser'
 
 const splitFile = new SplitFile()
 
-function blobToUInt8Array (blob: Blob, next: (uint8Array: Uint8Array) => void) {
+function blobToUInt8Array(blob: Blob, next: (uint8Array: Uint8Array) => void) {
   const fileReader = new FileReader()
   fileReader.onload = () => {
     next(new Uint8Array(fileReader.result as ArrayBuffer))

@@ -9,11 +9,11 @@ declare interface RTCDataChannel {
   onopen: (event: any) => void
   onclose: (event: any) => void
   onmessage: (event: MessageEvent) => void
-  send (message: any): void
-  close (): void
+  send(message: any): void
+  close(): void
 }
 
 declare interface RTCPeerConnection {
   ondatachannel: (event: { channel: RTCDataChannel }) => void
-  createDataChannel (channel: string): RTCDataChannel
+  createDataChannel(channel: string): RTCDataChannel
 }

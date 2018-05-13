@@ -20,7 +20,7 @@ const io = socketIO(server)
 /**
  * for all sockets, if it joined the room, count it, minus current socket itself
  */
-function getClientCount (room: string) {
+function getClientCount(room: string) {
   let clientCount = 0
   for (const socketId in io.sockets.sockets) {
     if (io.sockets.sockets.hasOwnProperty(socketId)) {
@@ -46,21 +46,21 @@ io.on('connection', socket => {
       })
     }, 300)
 
-        // when a client connected, client count changed, and should broadcast it to all clients in the room.
+    // when a client connected, client count changed, and should broadcast it to all clients in the room.
     sendClientCount()
 
     socket.on('copy', (data: types.CopyData) => {
-            // for all sockets, if it joined the room and not current socket, send the message
+      // for all sockets, if it joined the room and not current socket, send the message
       for (const socketId in io.sockets.sockets) {
         if (io.sockets.sockets.hasOwnProperty(socketId)) {
           const rooms = io.sockets.sockets[socketId].rooms
           if (rooms[room] !== undefined
-                        && socketId !== socket.id) {
+            && socketId !== socket.id) {
             io.in(socketId).emit('copy', data)
           }
         }
       }
-            // notify to sender if message is sent successfully
+      // notify to sender if message is sent successfully
       socket.emit('message_sent', {
         kind: data.kind
       })
@@ -71,12 +71,12 @@ io.on('connection', socket => {
         sid: socket.id,
         offer: data
       }
-            // for all sockets, if it joined the room and not current socket, send the offer
+      // for all sockets, if it joined the room and not current socket, send the offer
       for (const socketId in io.sockets.sockets) {
         if (io.sockets.sockets.hasOwnProperty(socketId)) {
           const rooms = io.sockets.sockets[socketId].rooms
           if (rooms[room] !== undefined
-                        && socketId !== socket.id) {
+            && socketId !== socket.id) {
             io.in(socketId).emit('offer', json)
           }
         }
@@ -90,7 +90,7 @@ io.on('connection', socket => {
       })
     })
 
-        // when a client disconnected, client count changed, and should broadcast it to all clients in the room.
+    // when a client disconnected, client count changed, and should broadcast it to all clients in the room.
     socket.on('disconnect', () => {
       sendClientCount()
     })

@@ -12,17 +12,17 @@ const supportWebRTC = !!window.RTCPeerConnection
 let locale: Locale | null = null
 let app: App
 
-function getRoom () {
+function getRoom() {
   return Math.round(Math.random() * 35 * Math.pow(36, 9)).toString(36)
 }
 
 import * as QRCode from 'qrcode'
 
-function printInConsole (message: any) {
+function printInConsole(message: any) {
   console.log(message)
 }
 
-function drawQRCode () {
+function drawQRCode() {
   QRCode.toCanvas(document.getElementById('qr'), document.location.href, (error: Error) => {
     if (error) {
       printInConsole(error)
@@ -76,11 +76,11 @@ type Block = {
 
 declare class Notification {
   static permission: 'granted' | 'denied' | 'default'
-  constructor (title: string);
-  static requestPermission (next: (permission: 'granted' | 'denied' | 'default') => void): void
+  constructor(title: string);
+  static requestPermission(next: (permission: 'granted' | 'denied' | 'default') => void): void
 }
 
-function notify (title: string) {
+function notify(title: string) {
   if (!('Notification' in window)) {
     return
   }
@@ -97,7 +97,7 @@ function notify (title: string) {
   }
 }
 
-function getCookie (name: string) {
+function getCookie(name: string) {
   const cookieStrings = document.cookie.split(';')
   for (const cookieString of cookieStrings) {
     const tmp = cookieString.trim().split('=')
@@ -109,6 +109,8 @@ function getCookie (name: string) {
 }
 
 const worker = new Worker('worker.bundle.js')
+
+const fileGotMessage = 'You got a file!'
 
 @Component({
   render: appTemplateHtml,
@@ -131,7 +133,8 @@ export class App extends Vue {
   private dataChannelIsOpen = false
   private splitFile = new SplitFile()
 
-  constructor (options?: ComponentOptions<Vue>) {
+  // tslint:disable-next-line:cognitive-complexity
+  constructor(options?: ComponentOptions<Vue>) {
     super()
     const hash = document.location.hash
     const room = (hash && hash !== '#') ? hash.substr(1) : getCookie('room') || localStorage.getItem('room') || getRoom()
@@ -199,17 +202,17 @@ export class App extends Vue {
                 id: this.id++
               })
               this.files.splice(currentBlockIndex, 1)
-              notify('You got a file!')
+              notify(fileGotMessage)
             }
           }
         }
       }
     }
   }
-  get canCreateOffer () {
+  get canCreateOffer() {
     return supportWebRTC && !this.dataChannelIsOpen
   }
-  changeRoom (room: string) {
+  changeRoom(room: string) {
     this.room = room
     document.location.hash = '#' + room
     localStorage.setItem('room', room)
@@ -218,16 +221,16 @@ export class App extends Vue {
     }
     this.connect(room)
   }
-  tryToConnect () {
+  tryToConnect() {
     if (this.peerConnection) {
       this.peerConnection.createOffer()
-                .then(offer => this.peerConnection!.setLocalDescription(offer))
-                .then(() => {
-                  this.socket!.emit('offer', this.peerConnection!.localDescription!.toJSON())
-                })
+        .then(offer => this.peerConnection!.setLocalDescription(offer))
+        .then(() => {
+          this.socket!.emit('offer', this.peerConnection!.localDescription!.toJSON())
+        })
     }
   }
-  copyText () {
+  copyText() {
     if (this.clientCount <= 0) {
       this.acceptMessages.unshift({
         kind: DataKind.text,
@@ -257,7 +260,7 @@ export class App extends Vue {
     }
     this.newText = ''
   }
-  fileGot (file: File | Blob) {
+  fileGot(file: File | Blob) {
     if (this.clientCount <= 0) {
       this.acceptMessages.unshift({
         kind: DataKind.text,
@@ -294,7 +297,7 @@ export class App extends Vue {
       })
     }
   }
-  private connect (room: string) {
+  private connect(room: string) {
     this.socket = io('/', { query: { room } })
     this.socket.on('copy', this.onMessageRecieved)
     this.socket.on('message_sent', this.onMessageSent)
@@ -306,7 +309,7 @@ export class App extends Vue {
     document.cookie = `room=${room}`
     drawQRCode()
   }
-  private onhashchange (e: HashChangeEvent) {
+  private onhashchange(e: HashChangeEvent) {
     if (e.newURL) {
       const index = e.newURL.indexOf('#')
       if (index > -1) {
@@ -318,11 +321,11 @@ export class App extends Vue {
       }
     }
   }
-  private onGetAnswer (data: { sid: string, answer: Description }) {
+  private onGetAnswer(data: { sid: string, answer: Description }) {
     const answer = new RTCSessionDescription(data.answer)
     this.peerConnection!.setRemoteDescription(answer as any)
   }
-  private onGetOffer (data: { sid: string, offer: Description }) {
+  private onGetOffer(data: { sid: string, offer: Description }) {
     const offer = new RTCSessionDescription(data.offer)
     this.peerConnection!.setRemoteDescription(offer as any)
       .then(() => this.peerConnection!.createAnswer())
@@ -334,7 +337,7 @@ export class App extends Vue {
         })
       })
   }
-  private onMessageRecieved (data: TextData | Base64Data | ArrayBufferData) {
+  private onMessageRecieved(data: TextData | Base64Data | ArrayBufferData) {
     if (data.kind === DataKind.file) {
       const file = new File([data.value], data.name, { type: data.type })
       this.acceptMessages.unshift({
@@ -355,7 +358,7 @@ export class App extends Vue {
         moment: Date.now(),
         id: this.id++
       })
-      notify('You got a file!')
+      notify(fileGotMessage)
     } else {
       data.moment = Date.now()
       data.id = this.id++
@@ -363,7 +366,7 @@ export class App extends Vue {
       notify('You got a text message!')
     }
   }
-  private onMessageSent (data: { kind: DataKind }) {
+  private onMessageSent(data: { kind: DataKind }) {
     this.acceptMessages.unshift({
       kind: DataKind.text,
       value: `the ${data.kind} is sent successfully to ${this.clientCount} clients.`,
@@ -371,10 +374,10 @@ export class App extends Vue {
       id: this.id++
     })
   }
-  private onClientCount (data: { clientCount: number }) {
+  private onClientCount(data: { clientCount: number }) {
     this.clientCount = data.clientCount
   }
-  get buttonText () {
+  get buttonText() {
     if (this.clientCount > 0) {
       return `Copy the text to ${this.clientCount} clients`
     }
@@ -382,7 +385,7 @@ export class App extends Vue {
   }
 }
 
-function start () {
+function start() {
   // tslint:disable-next-line:no-unused-expression
   app = new App({ el: '#body' })
 }
