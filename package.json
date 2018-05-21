@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "build": "clean-scripts build",
-    "test:run": "clean-release --config clean-run.config.js",
     "dev": "export NODE_ENV=development && clean-scripts build",
     "lint": "clean-scripts lint",
     "fix": "clean-scripts fix",
@@ -45,6 +44,7 @@
     "autoprefixer": "8.5.0",
     "bootstrap": "4.1.1",
     "clean-css-cli": "4.1.11",
+    "clean-release": "2.5.2",
     "clean-scripts": "1.9.2",
     "clipboard": "2.0.1",
     "file-uploader-vue-component": "7.2.2",

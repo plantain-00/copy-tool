@@ -1,4 +1,4 @@
-const { Service, executeScriptAsync } = require('clean-scripts')
+const { Service, executeScriptAsync, Program } = require('clean-scripts')
 const { watch } = require('watch-then-execute')
 
 const tsFiles = `"*.ts" "static/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts" "screenshots/**/*.ts"`
@@ -55,7 +55,8 @@ module.exports = {
     karma: [
       'tsc -p static_spec',
       'karma start static_spec/karma.config.js'
-    ]
+    ],
+    start: new Program('clean-release --config clean-run.config.js', 30000)
   },
   fix: {
     ts: `tslint --fix ${tsFiles}`,
