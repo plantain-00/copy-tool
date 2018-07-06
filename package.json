@@ -41,7 +41,7 @@
     "@types/qrcode": "1.2.0",
     "@types/socket.io": "1.4.36",
     "@types/socket.io-client": "1.4.32",
-    "autoprefixer": "8.6.4",
+    "autoprefixer": "8.6.5",
     "bootstrap": "4.1.1",
     "clean-css-cli": "4.1.11",
     "clean-release": "2.6.0",
@@ -77,7 +77,7 @@
     "vue": "2.5.16",
     "vue-class-component": "6.2.0",
     "watch-then-execute": "1.1.1",
-    "webpack": "4.14.0",
+    "webpack": "4.15.1",
     "webpack-cli": "3.0.8",
     "webrtc-adapter": "6.2.1"
   }
