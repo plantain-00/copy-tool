@@ -3,7 +3,7 @@ import Vue, { ComponentOptions } from 'vue'
 import Component from 'vue-class-component'
 import Clipboard from 'clipboard'
 import { DataKind, CopyData, WorkMessage, MessageKind, Description } from '../types'
-import SplitFile from 'js-split-file/browser'
+import SplitFile from 'js-split-file'
 import { appTemplateHtml, appTemplateHtmlStatic } from './variables'
 import { Locale } from 'file-uploader-vue-component'
 
