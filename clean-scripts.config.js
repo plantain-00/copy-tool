@@ -65,7 +65,6 @@ module.exports = {
   watch: {
     back: `${tscCommand} --watch`,
     template: `${file2variableCommand} --watch`,
-    front: `${tscStaticCommand} --watch`,
     webpack: `${webpackCommand} --watch`,
     css: () => watch(['static/index.css'], [], () => executeScriptAsync(cssCommand)),
     rev: `${revStaticCommand} --watch`,
