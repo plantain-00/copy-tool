@@ -127,7 +127,7 @@ export class App extends Vue {
   dataChannel: RTCDataChannel | null = null
 
   private id = 1
-  private socket: SocketIOClient.Socket | undefined
+  private socket?: SocketIOClient.Socket
   private clientCount = 0
   private peerConnection = supportWebRTC ? new RTCPeerConnection({}) : null
   private dataChannelIsOpen = false
