@@ -23,7 +23,7 @@ function printInConsole(message: any) {
 }
 
 function drawQRCode() {
-  QRCode.toCanvas(document.getElementById('qr'), document.location.href, (error: Error) => {
+  QRCode.toCanvas(document.getElementById('qr'), document.location!.href, (error: Error) => {
     if (error) {
       printInConsole(error)
     }
@@ -135,8 +135,8 @@ export class App extends Vue {
 
   // tslint:disable-next-line:cognitive-complexity
   constructor(options?: ComponentOptions<Vue>) {
-    super()
-    const hash = document.location.hash
+    super(options)
+    const hash = document.location!.hash
     const room = (hash && hash !== '#') ? hash.substr(1) : getCookie('room') || localStorage.getItem('room') || getRoom()
 
     window.onhashchange = this.onhashchange
@@ -214,7 +214,7 @@ export class App extends Vue {
   }
   changeRoom(room: string) {
     this.room = room
-    document.location.hash = '#' + room
+    document.location!.hash = '#' + room
     localStorage.setItem('room', room)
     if (this.socket) {
       this.socket.disconnect()
