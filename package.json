@@ -23,6 +23,9 @@
     "url": "https://github.com/plantain-00/copy-tool/issues"
   },
   "homepage": "https://github.com/plantain-00/copy-tool#readme",
+  "typeCoverage": {
+    "atLeast": 89
+  },
   "dependencies": {
     "express": "4.16.4",
     "lodash.debounce": "4.0.8",
@@ -73,7 +76,7 @@
     "tslint": "5.11.0",
     "tslint-config-standard": "8.0.1",
     "tslint-sonarts": "1.8.0",
-    "type-coverage": "1.4.1",
+    "type-coverage": "1.4.5",
     "typescript": "3.1.6",
     "uglify-js": "3",
     "vue": "2.5.17",
