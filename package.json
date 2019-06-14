@@ -31,7 +31,7 @@
     "lodash.debounce": "4.0.8",
     "minimist": "1.2.0",
     "socket.io": "2.2.0",
-    "tslib": "1.9.3"
+    "tslib": "1.10.0"
   },
   "devDependencies": {
     "@commitlint/cli": "8.0.0",
@@ -53,15 +53,15 @@
     "cross-env": "5.2.0",
     "file-uploader-vue-component": "7.6.0",
     "file2variable-cli": "1.8.5",
-    "github-fork-ribbon-css": "0.2.1",
+    "github-fork-ribbon-css": "0.2.3",
     "jasmine": "3.4.0",
     "js-split-file": "2.2.0",
     "karma": "4.1.0",
     "karma-chrome-launcher": "2.2.0",
     "karma-firefox-launcher": "1.1.0",
     "karma-jasmine": "2.0.1",
-    "karma-webpack": "4.0.1",
-    "markdownlint-cli": "0.16.0",
+    "karma-webpack": "4.0.2",
+    "markdownlint-cli": "0.17.0",
     "no-unused-export": "1.7.0",
     "postcss-cli": "6.1.2",
     "puppeteer": "1.17.0",
@@ -77,13 +77,13 @@
     "tslint-config-standard": "8.0.1",
     "tslint-sonarts": "1.9.0",
     "type-coverage": "2.0.2",
-    "typescript": "3.5.1",
+    "typescript": "3.5.2",
     "uglify-js": "3",
     "vue": "2.6.10",
     "vue-class-component": "7.1.0",
     "watch-then-execute": "1.1.1",
-    "webpack": "4.33.0",
-    "webpack-cli": "3.3.3",
+    "webpack": "4.34.0",
+    "webpack-cli": "3.3.4",
     "webrtc-adapter": "7.2.4"
   }
 }
