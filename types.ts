@@ -24,7 +24,7 @@ export type CopyData =
       type: string
     }
 
-export type Description = {
+export interface Description {
   type: 'offer' | 'answer',
   sdp: string
 }

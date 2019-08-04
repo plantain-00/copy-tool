@@ -15,7 +15,7 @@ import puppeteer from 'puppeteer'
   await page2.screenshot({ path: `screenshots/second-client.png` })
   await page.screenshot({ path: `screenshots/first-client.png` })
 
-  await (page.type as any)('textarea', 'hello world!')
+  await page.type('textarea', 'hello world!')
   await page.click('.btn-primary')
   await page.waitFor(500)
   await page.screenshot({ path: `screenshots/client-1-send-text.png` })
@@ -33,11 +33,11 @@ import puppeteer from 'puppeteer'
   await page.screenshot({ path: `screenshots/client-1-try-to-connect.png` })
   await page2.screenshot({ path: `screenshots/client-2-try-to-connect.png` })
 
-  await (page.type as any)('textarea', 'hello world!')
+  await page.type('textarea', 'hello world!')
   await page.click('.btn-primary')
   await page.waitFor(500)
   await page.screenshot({ path: `screenshots/client-1-send-text-by-webrtc.png` })
   await page2.screenshot({ path: `screenshots/client-2-send-text-by-webrtc.png` })
 
-  browser.close()
+  await browser.close()
 })()

@@ -30,17 +30,16 @@ function drawQRCode() {
   })
 }
 
-// tslint:disable-next-line:no-unused-expression
 new Clipboard('.clipboard')
 
-type TextData = {
+interface TextData {
   kind: DataKind.text;
   value: string;
   moment?: number;
   id?: number;
 }
 
-type Base64Data = {
+interface Base64Data {
   kind: DataKind.base64;
   value: string;
   url: string;
@@ -50,14 +49,14 @@ type Base64Data = {
   id: number;
 }
 
-type ArrayBufferData = {
+interface ArrayBufferData {
   kind: DataKind.file;
   value: ArrayBuffer;
   name: string;
   type: string;
 }
 
-type FileData = {
+interface FileData {
   kind: DataKind.file;
   value: File;
   url: string;
@@ -65,7 +64,7 @@ type FileData = {
   id: number;
 }
 
-type Block = {
+interface Block {
   fileName: string;
   blocks: {
     currentBlockIndex: number,
@@ -85,12 +84,10 @@ function notify(title: string) {
     return
   }
   if (Notification.permission === 'granted') {
-    // tslint:disable-next-line:no-unused-expression
     new Notification(title)
   } else if (Notification.permission !== 'denied') {
     Notification.requestPermission(permission => {
       if (permission === 'granted') {
-        // tslint:disable-next-line:no-unused-expression
         new Notification(title)
       }
     })
@@ -133,7 +130,6 @@ export class App extends Vue {
   private dataChannelIsOpen = false
   private splitFile = new SplitFile()
 
-  // tslint:disable-next-line:cognitive-complexity
   constructor(options?: ComponentOptions<Vue>) {
     super(options)
     const hash = document.location!.hash
@@ -386,7 +382,6 @@ export class App extends Vue {
 }
 
 function start() {
-  // tslint:disable-next-line:no-unused-expression
   app = new App({ el: '#body' })
 }
 
