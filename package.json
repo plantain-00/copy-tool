@@ -1,6 +1,6 @@
 {
   "name": "copy-tool",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A tool to copy text or file from one place, and get it from another place",
   "main": "index.js",
   "scripts": {
