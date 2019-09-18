@@ -6,6 +6,7 @@ import { DataKind, CopyData, WorkMessage, MessageKind, Description } from '../ty
 import SplitFile from 'js-split-file'
 import { appTemplateHtml, appTemplateHtmlStatic } from './variables'
 import { Locale } from 'file-uploader-vue-component'
+import 'file-uploader-vue-component'
 
 const supportWebRTC = !!window.RTCPeerConnection
 
