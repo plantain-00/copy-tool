@@ -1,16 +1,15 @@
-const { Service, executeScriptAsync, Program } = require('clean-scripts')
-const { watch } = require('watch-then-execute')
+import { executeScriptAsync, Program } from 'clean-scripts'
+import { watch } from 'watch-then-execute'
 
-const tsFiles = `"*.ts" "static/**/*.ts" "spec/**/*.ts" "static_spec/**/*.ts" "screenshots/**/*.ts"`
-const jsFiles = `"*.config.js" "static/**/*.config.js" "static_spec/**/*.config.js"`
+const tsFiles = `"*.ts" "static/**/*.ts"`
+const jsFiles = `"*.config.js" "static/**/*.config.js"`
 
 const isDev = process.env.NODE_ENV === 'development'
 
 const tscCommand = `tsc`
-const file2variableCommand = `file2variable-cli --config static/file2variable.config.js`
-const tscStaticCommand = `tsc -p static`
-const webpackCommand = `webpack --config static/webpack.config.js`
-const revStaticCommand = `rev-static --config static/rev-static.config.js`
+const file2variableCommand = `file2variable-cli --config static/file2variable.config.ts`
+const webpackCommand = `webpack --config static/webpack.config.ts`
+const revStaticCommand = `rev-static --config static/rev-static.config.ts`
 const cssCommand = [
   `postcss static/index.css -o static/index.postcss.css`,
   `cleancss static/index.postcss.css -o static/index.bundle.css`
@@ -27,7 +26,6 @@ module.exports = {
       {
         js: [
           file2variableCommand,
-          tscStaticCommand,
           webpackCommand
         ],
         css: [
@@ -49,15 +47,7 @@ module.exports = {
     typeCoverageStatic: 'type-coverage -p static --strict'
   },
   test: {
-    jasmine: [
-      'tsc -p spec',
-      'jasmine'
-    ],
-    karma: [
-      'tsc -p static_spec',
-      'karma start static_spec/karma.config.js'
-    ],
-    start: new Program('clean-release --config clean-run.config.js', 30000)
+    start: new Program('clean-release --config clean-run.config.ts', 30000)
   },
   fix: `eslint --ext .js,.ts,.tsx ${tsFiles} ${jsFiles} --fix`,
   watch: {
@@ -67,17 +57,5 @@ module.exports = {
     css: () => watch(['static/index.css'], [], () => executeScriptAsync(cssCommand)),
     rev: `${revStaticCommand} --watch`,
     sw: () => watch(['static/vendor.bundle-*.js', 'static/vendor.bundle-*.css', 'static/index.html', 'static/worker.bundle.js'], [], () => executeScriptAsync(swCommand))
-  },
-  screenshot: [
-    new Service(`node index.js`),
-    `tsc -p screenshots`,
-    `node screenshots/index.js`
-  ],
-  prerender: [
-    new Service(`node index.js`),
-    `tsc -p prerender`,
-    `node prerender/index.js`,
-    revStaticCommand,
-    swCommand
-  ]
+  }
 }

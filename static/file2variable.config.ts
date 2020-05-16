@@ -1,4 +1,6 @@
-module.exports = {
+import { ConfigData } from 'file2variable-cli'
+
+export default {
   base: 'static',
   files: [
     'static/app.template.html'
@@ -6,7 +8,7 @@ module.exports = {
   /**
    * @argument {string} file
    */
-  handler: file => {
+  handler: (file: string) => {
     return {
       type: 'vue',
       name: 'App',
@@ -14,4 +16,4 @@ module.exports = {
     }
   },
   out: 'static/variables.ts'
-}
+} as ConfigData

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   include: [
     'index.js',
     'package.json',

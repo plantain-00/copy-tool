@@ -1,6 +1,6 @@
-const fs = require('fs')
+import { ConfigData } from 'rev-static'
 
-module.exports = {
+export default {
   inputFiles: [
     'static/*.bundle.css',
     'static/*.bundle.js',
@@ -16,16 +16,12 @@ module.exports = {
     'static/index.bundle.js',
     'static/index.bundle.css'
   ],
-  outputFiles: file => file.replace('.ejs', ''),
-  json: false,
+  outputFiles: (file: string) => file.replace('.ejs', ''),
   ejsOptions: {
     rmWhitespace: true
   },
   sha: 256,
-  customNewFileName: (filePath, fileString, md5String, baseName, extensionName) => baseName + '-' + md5String + extensionName,
+  customNewFileName: (_filePath, _fileString, md5String, baseName, extensionName) => baseName + '-' + md5String + extensionName,
   base: 'static',
-  fileSize: 'static/file-size.json',
-  context: {
-    prerender: fs.readFileSync('prerender/index.html')
-  }
-}
+  fileSize: 'static/file-size.json'
+} as ConfigData
