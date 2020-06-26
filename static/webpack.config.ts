@@ -1,8 +1,10 @@
 import * as webpack from 'webpack'
 
-export default [
+const mode = (process.env.NODE_ENV || 'production') as 'development' | 'production'
+
+const config: webpack.Configuration[] = [
   {
-    mode: process.env.NODE_ENV || 'production',
+    mode,
     entry: {
       index: './static/index.ts'
     },
@@ -31,7 +33,7 @@ export default [
     }
   },
   {
-    mode: process.env.NODE_ENV || 'production',
+    mode,
     entry: {
       worker: './static/worker.ts'
     },
@@ -48,4 +50,6 @@ export default [
       filename: '[name].bundle.js'
     }
   }
-] as webpack.Configuration[]
+]
+
+export default config

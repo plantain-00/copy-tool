@@ -1,6 +1,6 @@
 import { ConfigData } from 'rev-static'
 
-export default {
+const config: ConfigData = {
   inputFiles: [
     'static/*.bundle.css',
     'static/*.bundle.js',
@@ -24,4 +24,6 @@ export default {
   customNewFileName: (_filePath, _fileString, md5String, baseName, extensionName) => baseName + '-' + md5String + extensionName,
   base: 'static',
   fileSize: 'static/file-size.json'
-} as ConfigData
+}
+
+export default config

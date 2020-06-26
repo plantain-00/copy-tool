@@ -41,10 +41,9 @@ module.exports = {
   lint: {
     ts: `eslint --ext .js,.ts,.tsx ${tsFiles} ${jsFiles}`,
     export: `no-unused-export ${tsFiles}`,
-    commit: `commitlint --from=HEAD~1`,
     markdown: `markdownlint README.md`,
-    typeCoverage: 'type-coverage -p . --strict',
-    typeCoverageStatic: 'type-coverage -p static --strict'
+    typeCoverage: 'type-coverage -p . --strict --ignore-catch',
+    typeCoverageStatic: 'type-coverage -p static --strict --ignore-catch --ignore-files "static/variables.ts"'
   },
   test: {
     start: new Program('clean-release --config clean-run.config.ts', 30000)
