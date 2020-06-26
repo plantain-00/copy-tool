@@ -2,7 +2,6 @@ import { executeScriptAsync, Program } from 'clean-scripts'
 import { watch } from 'watch-then-execute'
 
 const tsFiles = `"*.ts" "static/**/*.ts"`
-const jsFiles = `"*.config.js" "static/**/*.config.js"`
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -39,7 +38,7 @@ module.exports = {
     ]
   },
   lint: {
-    ts: `eslint --ext .js,.ts,.tsx ${tsFiles} ${jsFiles}`,
+    ts: `eslint --ext .js,.ts,.tsx ${tsFiles}`,
     export: `no-unused-export ${tsFiles}`,
     markdown: `markdownlint README.md`,
     typeCoverage: 'type-coverage -p . --strict --ignore-catch',
@@ -48,7 +47,7 @@ module.exports = {
   test: {
     start: new Program('clean-release --config clean-run.config.ts', 30000)
   },
-  fix: `eslint --ext .js,.ts,.tsx ${tsFiles} ${jsFiles} --fix`,
+  fix: `eslint --ext .js,.ts,.tsx ${tsFiles} --fix`,
   watch: {
     back: `${tscCommand} --watch`,
     template: `${file2variableCommand} --watch`,
