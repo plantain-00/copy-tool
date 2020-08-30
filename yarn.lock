@@ -1225,10 +1225,10 @@ clean-release@2.14.0:
     rimraf "3"
     tmp "0.2"
 
-clean-scripts@1, clean-scripts@1.17.0:
-  version "1.17.0"
-  resolved "https://registry.yarnpkg.com/clean-scripts/-/clean-scripts-1.17.0.tgz#4300df98b9a7c36c15040f0937b72647860b143b"
-  integrity sha512-6oXN1f5aV+xhJ+JTiu5ABgHpRq34eXCzXZwN3wjeS0sxUOFNCCHvbPRpXXo2XLdPBoMwthx4k8U/L2SC8aB+Zg==
+clean-scripts@1, clean-scripts@1.17.1:
+  version "1.17.1"
+  resolved "https://registry.yarnpkg.com/clean-scripts/-/clean-scripts-1.17.1.tgz#bbe439f3ada2424ee446c7e1e8753b014539e916"
+  integrity sha512-hnH7Zc4FrERo3cwF+ojJ2hCbqgiMJUfGSSkszA2GjZLW4ImJumRqHkE8wvbOa5iGsAC9xcS+yYUGt63duxjK4A==
   dependencies:
     glob "7"
     minimist "1"

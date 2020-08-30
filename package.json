@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/plantain-00/copy-tool#readme",
   "typeCoverage": {
-    "atLeast": 92.3
+    "atLeast": 94.57
   },
   "dependencies": {
     "express": "4.17.1",
@@ -45,7 +45,7 @@
     "bootstrap": "4.5.2",
     "clean-css-cli": "4.3.0",
     "clean-release": "2.14.0",
-    "clean-scripts": "1.17.0",
+    "clean-scripts": "1.17.1",
     "clipboard": "2.0.6",
     "cross-env": "7.0.2",
     "eslint": "7.7.0",

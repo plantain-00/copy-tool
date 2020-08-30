@@ -404,7 +404,7 @@ worker.onmessage = e => {
 }
 
 if (navigator.serviceWorker && !location.host.startsWith('localhost')) {
-  navigator.serviceWorker.register('service-worker.bundle.js').catch(error => {
+  navigator.serviceWorker.register('service-worker.bundle.js').catch((error: unknown) => {
     printInConsole('registration failed with error: ' + error)
   })
 }
