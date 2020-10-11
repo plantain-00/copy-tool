@@ -5,14 +5,9 @@ const config: ConfigData = {
   files: [
     'static/app.template.html'
   ],
-  /**
-   * @argument {string} file
-   */
-  handler: (file: string) => {
+  handler: () => {
     return {
-      type: 'vue',
-      name: 'App',
-      path: './index'
+      type: 'vue3',
     }
   },
   out: 'static/variables.ts'
