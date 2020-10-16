@@ -164,7 +164,7 @@ export function appTemplateHtml(_ctx, _cache) {
     _createVNode("div", { class: "row" }, [
       _createVNode("div", { class: "col-md-12" }, [
         _createVNode(_component_file_uploader, {
-          "onFile-got": _cache[13] || (_cache[13] = $event => (_ctx.fileGot($event))),
+          onFileGot: _cache[13] || (_cache[13] = $event => (_ctx.fileGot($event))),
           multiple: "true",
           locale: _ctx.locale
         }, null, 8 /* PROPS */, ["locale"])
