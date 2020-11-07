@@ -1,7 +1,8 @@
 {
   "extends": "tsconfig-plantain",
   "compilerOptions": {
-    "module": "commonjs"
+    "module": "commonjs",
+    "target": "ES2018"
   },
   "files": [
     "index.ts",

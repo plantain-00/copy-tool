@@ -1,5 +1,5 @@
 import express from 'express'
-import socketIO from 'socket.io'
+import { Server, Socket } from 'socket.io'
 import minimist from 'minimist'
 import debounce from 'lodash.debounce'
 import * as types from './types'
@@ -15,26 +15,23 @@ const server = app.listen(port, host, () => {
   console.log(`api Server is listening: ${host}:${port}`)
 })
 
-const io = socketIO(server)
+const io = new Server(server)
 
 /**
  * for all sockets, if it joined the room, count it, minus current socket itself
  */
 function getClientCount(room: string) {
   let clientCount = 0
-  for (const socketId in io.sockets.sockets) {
-    if (io.sockets.sockets.hasOwnProperty(socketId)) {
-      const rooms = io.sockets.sockets[socketId].rooms
-      if (rooms[room] !== undefined) {
-        clientCount++
-      }
+  for (const socket of io.sockets.sockets.values()) {
+    if (socket.rooms.has(room)) {
+      clientCount++
     }
   }
   return clientCount - 1
 }
 
-io.on('connection', socket => {
-  const room = socket.handshake.query.room
+io.on('connection', (socket: Socket) => {
+  const room = (socket.handshake.query as { [key: string]: string }).room
   if (!room) {
     socket.disconnect(true)
   } else {
@@ -51,13 +48,9 @@ io.on('connection', socket => {
 
     socket.on('copy', (data: types.CopyData) => {
       // for all sockets, if it joined the room and not current socket, send the message
-      for (const socketId in io.sockets.sockets) {
-        if (io.sockets.sockets.hasOwnProperty(socketId)) {
-          const rooms = io.sockets.sockets[socketId].rooms
-          if (rooms[room] !== undefined
-            && socketId !== socket.id) {
-            io.in(socketId).emit('copy', data)
-          }
+      for (const [socketId, s] of io.sockets.sockets.entries()) {
+        if (s.rooms.has(room) && socketId !== socket.id) {
+          io.in(socketId).emit('copy', data)
         }
       }
       // notify to sender if message is sent successfully
@@ -72,13 +65,9 @@ io.on('connection', socket => {
         offer: data
       }
       // for all sockets, if it joined the room and not current socket, send the offer
-      for (const socketId in io.sockets.sockets) {
-        if (io.sockets.sockets.hasOwnProperty(socketId)) {
-          const rooms = io.sockets.sockets[socketId].rooms
-          if (rooms[room] !== undefined
-            && socketId !== socket.id) {
-            io.in(socketId).emit('offer', json)
-          }
+      for (const [socketId, s] of io.sockets.sockets.entries()) {
+        if (s.rooms.has(room) && socketId !== socket.id) {
+          io.in(socketId).emit('offer', json)
         }
       }
     })
