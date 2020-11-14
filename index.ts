@@ -5,7 +5,10 @@ import debounce from 'lodash.debounce'
 import * as types from './types'
 
 const app = express()
-const argv = minimist(process.argv.slice(2))
+const argv = minimist(process.argv.slice(2)) as unknown as {
+  p: number
+  h: string
+}
 const port = argv.p || 8000
 const host = argv.h || 'localhost'
 
