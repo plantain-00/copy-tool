@@ -1,4 +1,4 @@
-import io from 'socket.io-client'
+import io, { Socket } from 'socket.io-client'
 import { createApp, defineComponent } from 'vue'
 import Clipboard from 'clipboard'
 import { DataKind, CopyData, WorkMessage, MessageKind, Description } from '../types'
@@ -120,7 +120,7 @@ const App = defineComponent({
       room: '',
       dataChannel: null as RTCDataChannel | null,
       id: 1,
-      socket: undefined as undefined | SocketIOClient.Socket,
+      socket: undefined as undefined | Socket,
       clientCount: 0,
       peerConnection: supportWebRTC ? new RTCPeerConnection({}) : null,
       dataChannelIsOpen: false,
